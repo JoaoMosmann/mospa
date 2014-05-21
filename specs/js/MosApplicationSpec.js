@@ -1,4 +1,4 @@
-describe("MosApplication", function() {
+describe("A MosApplication", function() {
   var application;
 
   beforeEach(function() {
@@ -10,8 +10,6 @@ describe("MosApplication", function() {
     var page = new MosPage({
       hash: 'home'
     });
-
-    
 
     expect(application.addPage(page)).toBeTruthy();
     

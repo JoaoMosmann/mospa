@@ -1,0 +1,13 @@
+{
+  "name": "mospa",
+  "description": "A simple SinglePageApplication framework",
+  "version": "0.1.0",
+  "homepage": "https://github.com/JoaoMosmann/mospa",
+  "main": "./dist/mospa.js",
+  "ignore": [
+    "src",
+    "tests",
+    "node_modules",
+    "bower_components"
+  ]
+}

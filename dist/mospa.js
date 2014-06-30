@@ -59,7 +59,6 @@ var MosApplication = function(config){
 
 		return true;
 	};
-
 	this.getPages = function(){
 		return pages.concat();
 	}
@@ -67,8 +66,7 @@ var MosApplication = function(config){
 	var that = this;
 	window.addEventListener("hashchange", function(e){
 		
-
-
+		console.log(e);
 
 	}, false);
 

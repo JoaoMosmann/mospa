@@ -44,7 +44,7 @@
 			);
 
 
-			app.createPage(
+			window.prodPage = app.createPage(
 				{
 					slug		: "products", 
 					domElement	: document.getElementById('products')
@@ -55,6 +55,10 @@
 				
 				}
 			);
+
+			prodPage.bind('hashchange',function(e){
+				console.log(e);
+			})
 
 			app.createPage(
 				{

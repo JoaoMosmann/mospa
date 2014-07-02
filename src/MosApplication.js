@@ -56,9 +56,9 @@ var MosApplication = function(config){
 			currentPage.trigger('hashchange',newHash);
 		} else {
 			// A DIFFERENT PAGE. GO TO THIS PAGE.
-			console.log(4);
 			for(var x in pages){
 				if(pages[x].getSlug() == newHash[0]){
+					currentHash = newHash;
 					thisApp.setCurrentPage(pages[x]);
 					break;
 				}

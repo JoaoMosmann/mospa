@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>MoSPA</title>
+
+	<script type="text/javascript" src="dist/mospa.js"></script>
+	<script type="text/javascript">
+
+
+		
+
+
+		document.addEventListener('DOMContentLoaded', function(){
+
+			window.app = mospa.createApplication('scrollapp', 'myapp',
+				function(b){
+					console.log('constructor :: config', b,this);
+
+
+
+
+				}
+			);
+
+
+			app.createPage(
+				{
+					slug		: "home", 
+					domElement	: document.getElementById('home')
+				},
+				function(config){
+
+					console.log('I\'m the home page');
+					var dom = this.getDomElement();
+					var bt = dom.getElementsByClassName('bt')[0];
+					console.log(bt);
+					bt.addEventListener('click',function(){
+
+						console.log('go to contact!!!');
+
+					})
+				}
+			);
+
+
+			app.createPage(
+				{
+					slug		: "products", 
+					domElement	: document.getElementById('products')
+				},
+				function(config){
+
+					console.log('I\'m the product page');
+				
+				}
+			);
+
+			app.createPage(
+				{
+					slug		: "about-us", 
+					domElement	: document.getElementById('about-us')
+				},
+				function(config){
+
+					console.log('I\'m the about-us page');
+				
+				}
+			);
+
+			app.createPage(
+				{
+					slug		: "contact", 
+					domElement	: document.getElementById('contact')
+				},
+				function(config){
+
+					console.log('I\'m the contact page');
+				
+				}
+			);
+
+
+		});
+
+		
+
+		
+
+
+	</script>
+	<style>
+
+		body>*{
+			width: 500px;
+			background:black;
+			outline:2px solid red;
+			margin: 0 auto;
+			min-height:200px;
+			color: white;
+			text-align: center;
+			box-sizing: border-box;
+			padding: 50px;
+		}
+
+		#home {height:400px;}
+		#products {height:800px;}
+		#about-us {height:250px;}
+		#contact {height:600px;}
+
+		.bt {display:inline-block;border:1px solid red; line-height:50px;background:#999;cursor:pointer;text-decoration:none;padding:0 10px;color:#FFF;}
+		.bt:hover{color:#F00;}
+		.bt.activated{background:#333;border-color:green;}
+
+	</style>
+</head>
+
+<body>
+
+	<header>
+		header<br/>
+
+		<a href="#/home" class="bt activated">Home</a>
+		<a href="#/products" class="bt">Products</a>
+		<a href="#/about-us" class="bt">About Us</a>
+		<a href="#/contact" class="bt">Contact</a>
+
+
+	</header>
+
+	<section id="home">
+		home
+		<br/>
+		<span class="bt">Go to Contacts</span>
+
+	</section>
+
+	<section id="products">
+		products
+	</section>
+
+	<section id="about-us">
+		about-us
+	</section>
+
+	<section id="contact">
+		contact
+	</section>
+
+
+	<footer>
+		footer
+	</footer>
+
+
+</body>
+</html>

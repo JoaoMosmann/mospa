@@ -2,7 +2,10 @@ var MosApplication = function(config){
 	EventHandler.call(this);
 
 	console.log('MosApplication :: config',config);
-	var pages = [];
+	var pages = [],
+		thisApp = this,
+		currentHash = null,
+		currentPage = null;
 
 
 	this.addPage = function(p){
@@ -31,10 +34,37 @@ var MosApplication = function(config){
 		return pages.concat();
 	}
 
-	var that = this;
+	this.getCurrentPage = function(){
+		return currentPage;
+	}
+
+	this.setCurrentPage = function(p){
+		console.log('page '+p.getSlug()+' setted as currentPage');
+		currentPage = p;
+	}
+
 	window.addEventListener("hashchange", function(e){
-		
-		console.log(e);
+
+		var newHash = location.hash.split('/').slice(1);
+
+		if(currentHash != null && newHash.join('/') == currentHash.join('/')){
+			// SAME HASH... SHOULD DO NOTHING.
+
+		} else if(currentHash != null && newHash[0] == currentHash[0]){
+			// SAME PAGE. TRIGGER EVENT FOR THE PAGE
+
+			currentPage.trigger('hashchange',newHash);
+		} else {
+			// A DIFFERENT PAGE. GO TO THIS PAGE.
+			console.log(4);
+			for(var x in pages){
+				if(pages[x].getSlug() == newHash[0]){
+					thisApp.setCurrentPage(pages[x]);
+					break;
+				}
+			}
+
+		}
 
 	}, false);
 

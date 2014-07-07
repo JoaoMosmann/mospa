@@ -19,38 +19,36 @@ if (typeof Object.create != 'function') {
 
 var mospa = (function () {
  
+    return { 
+        createApplication: function ( type, id, constructor ) {
+
+            var appClass;
 
 
-	return { 
-		createApplication: function ( type, id, constructor ) {
+            /* 
+                
+                TO DO:
+                    Other types of Apps. Like "AjaxApp" that pages html are taken from urls.
 
-			var appClass;
-
-
-			/* 
-				
-				TO DO:
-					Other types of Apps. Like "AjaxApp" that pages html are taken from urls.
-
-			*/
-			if(type == 'scrollapp') appClass = MosScrollApp;
+            */
+            if(type == 'scrollapp') appClass = MosScrollApp;
 
 
-			var config = {
-				type: type,
-				id: id
-			};
+            var config = {
+                type: type,
+                id: id
+            };
 
-			var app = new appClass(config);
+            var app = new appClass(config);
 
-			if(typeof constructor == 'function')
-				constructor.call(app,config);
+            if(typeof constructor == 'function')
+                constructor.call(app,config);
 
-			return app;
+            return app;
 
 
-		}
-	};
+        }
+    };
 
 })();
  

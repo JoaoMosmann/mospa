@@ -3,8 +3,12 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-		all: ['src/**/*']
-	},
+      all: ['src/**/*']
+    },
+
+    jslint: {
+      all: ['src/**/*']
+    },
 
     concat: {
   	  options: {
@@ -37,7 +41,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-jslint');
  
   grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
   grunt.registerTask('hint', ['jshint']);
+  grunt.registerTask('lint', ['jslint']);
 };

@@ -1,4 +1,5 @@
 var MosPage = function (config) {
+    'use strict';
     EventHandler.call(this);
 
     var slug,

@@ -16,7 +16,7 @@ var EventHandler = function () {
 
     this.unbind = function (event, fn) {
         var i;
-        for (i = 0; i < events.length; i++) {
+        for (i = 0; i < events.length; i += 1) {
             if (events[i] !== null && events[i].type === event && (events[i].callback === fn || fn === undefined)) {
                 events[i] = null;
             }
@@ -36,7 +36,7 @@ var EventHandler = function () {
             data: data
         };
 
-        for (i = 0; i < events.length; i++) {
+        for (i = 0; i < events.length; i += 1) {
             if (e.stopped) {
                 break;
             }

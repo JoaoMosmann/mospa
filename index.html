@@ -15,10 +15,21 @@
 
 			window.app = mospa.createApplication('scrollapp', 'myapp',
 				function(b){
-					console.log('constructor :: config', b,this);
 
+					this.bind('pagechange', function (e) {
+						
+						var n = e.data.newPage;
+						var o = e.data.oldPage;
+						
+						if(o != null) {
+							var oBt = document.querySelector('header>a[href="#/'+o.getSlug()+'"]');
+							oBt.classList.remove('activated');
+						}
 
+						var nBt = document.querySelector('header>a[href="#/'+n.getSlug()+'"]');
+						nBt.classList.add('activated');
 
+					});
 
 				}
 			);
@@ -124,7 +135,7 @@
 	<header>
 		header<br/>
 
-		<a href="#/home" class="bt activated">Home</a>
+		<a href="#/home" class="bt">Home</a>
 		<a href="#/products" class="bt">Products</a>
 		<a href="#/about-us" class="bt">About Us</a>
 		<a href="#/contact" class="bt">Contact</a>

@@ -2,7 +2,6 @@ var MosApplication = function (config) {
     'use strict';
     EventHandler.call(this);
 
-    console.log('MosApplication :: config', config);
     var pages = [],
         thisApp = this,
         currentHash = null,
@@ -12,7 +11,6 @@ var MosApplication = function (config) {
     this.addPage = function (p) {
         var x;
 
-        console.log('MosApplication :: addPage :: config', config);
         if (p.constructor !== MosPage) {
             throw new Error('The addPage first parameter must be a MosPage instance.');
         }
@@ -30,6 +28,10 @@ var MosApplication = function (config) {
         p.application = this;
         pages.push(p);
 
+        this.trigger('pageadded', {
+            page: p
+        });
+
         return true;
     };
 
@@ -42,7 +44,10 @@ var MosApplication = function (config) {
     };
 
     this.setCurrentPage = function (p) {
-        console.log('page ' + p.getSlug() + ' setted as currentPage');
+        this.trigger('pagechange',{
+            oldPage: currentPage,
+            newPage: p
+        });
         currentPage = p;
     };
 
@@ -79,7 +84,6 @@ var MosApplication = function (config) {
 
 MosApplication.prototype.createPage = function (config, constructor) {
     'use strict';
-    console.log('MosApplication :: createPage :: config', config);
 
     var page = new MosPage(config);
 

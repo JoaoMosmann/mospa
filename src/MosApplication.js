@@ -44,7 +44,7 @@ var MosApplication = function (config) {
     };
 
     this.setCurrentPage = function (p) {
-        this.trigger('pagechange',{
+        this.trigger('pagechange', {
             oldPage: currentPage,
             newPage: p
         });

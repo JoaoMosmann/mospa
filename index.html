@@ -45,7 +45,7 @@
 					console.log('I\'m the home page');
 					var dom = this.getDomElement();
 					var bt = dom.getElementsByClassName('bt')[0];
-					console.log(bt);
+
 					bt.addEventListener('click',function(){
 
 						console.log('go to contact!!!');
@@ -106,7 +106,7 @@
 	</script>
 	<style>
 
-		body>*{
+		header, footer, #pageContainer>*{
 			width: 500px;
 			background:black;
 			outline:2px solid red;
@@ -143,27 +143,28 @@
 
 	</header>
 
-	<section id="home">
-		home
-		<br/>
-		<span class="bt">Go to Contacts</span>
+	<div id="pageContainer" style="position:relative">
 
-	</section>
+		<section id="home">
+			home
+			<br/>
+			<span class="bt">Go to Contacts</span>
 
-	<section id="products">
-		products
-	</section>
+		</section>
 
-	<div style="position: static;">
+		<section id="products">
+			products
+		</section>
+
 		<section id="about-us">
 			about-us
 		</section>
+
+		<section id="contact">
+			contact
+		</section>
+
 	</div>
-
-	<section id="contact">
-		contact
-	</section>
-
 
 	<footer>
 		footer

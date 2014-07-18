@@ -39,6 +39,17 @@ var MosApplication = function (config) {
         return pages.concat();
     };
 
+    this.getPageBySlug = function (s) {
+        var x,
+            l = pages.length;
+        for (x = 0; x < l; x+=1) {
+            if(pages[x].getSlug() === s) {
+                pages[x];
+            }
+        }
+        return null;
+    };
+
     this.getCurrentPage = function () {
         return currentPage;
     };

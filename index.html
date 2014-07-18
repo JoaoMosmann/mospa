@@ -50,7 +50,15 @@
 
 						console.log('go to contact!!!');
 
-					})
+					});
+
+					this.bind('appeared', function(){
+						console.log('My name is HOME and I\'m visible now!!!')
+					});
+
+					this.bind('disappeared', function(){
+						console.log('HOME is invisible now!!!')
+					});
 				}
 			);
 

@@ -44,7 +44,7 @@ var MosApplication = function (config) {
             l = pages.length;
         for (x = 0; x < l; x+=1) {
             if(pages[x].getSlug() === s) {
-                pages[x];
+                return pages[x];
             }
         }
         return null;

@@ -99,7 +99,7 @@ var MosApplication = function (config) {
             l = pages.length;
         for (x = 0; x < l; x+=1) {
             if(pages[x].getSlug() === s) {
-                pages[x];
+                return pages[x];
             }
         }
         return null;
@@ -198,7 +198,8 @@ var MosScrollApp = function (config) {
     'use strict';
     this.constructor.call(this, config);
 
-    var offsetCache = {},
+    var that = this,
+        offsetCache = {},
         offsetParent = null,
         prevPagesPercData = {},
         /*
@@ -310,16 +311,16 @@ var MosScrollApp = function (config) {
         /*
             Checking which pages appeared and disappeared in this scroll event.
             And triggering a event if it does.
-        */
-        for (x in prevPagesPercData) {
+        */        
+        for (x in prevPagesPercData) {            
             if (!pagesPercData.hasOwnProperty(x)) {
-                this.getPageBySlug(x).trigger('disappeared');
+                that.getPageBySlug(x).trigger('disappeared');
             }
         }
 
         for (x in pagesPercData) {
             if (!prevPagesPercData.hasOwnProperty(x)) {
-                this.getPageBySlug(x).trigger('appeared');
+                that.getPageBySlug(x).trigger('appeared');
             }
         }
 

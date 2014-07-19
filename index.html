@@ -52,12 +52,12 @@
 
 					});
 
-					this.bind('appeared', function(){
-						console.log('My name is HOME and I\'m visible now!!!')
+					this.bind('appeared', function(e){
+						console.log('My name is HOME and I\'m visible now!!!', e)
 					});
 
-					this.bind('disappeared', function(){
-						console.log('HOME is invisible now!!!')
+					this.bind('disappeared', function(e){
+						console.log('HOME is invisible now!!!', e)
 					});
 				}
 			);

@@ -6,6 +6,7 @@ var MosScrollApp = function (config) {
         offsetCache = {},
         offsetParent = null,
         prevPagesPercData = {},
+        prevScrollTop = null,
         /*
             Calculates and store the starting and ending points for each page.
             Storing this values improves the performance by avoiding further
@@ -68,9 +69,21 @@ var MosScrollApp = function (config) {
         var wBegin = document.body.scrollTop,
             wEnd = wBegin + window.innerHeight,
             pagesPercData = {},
+            scrollDirection = 'stopped',
             cBegin, cEnd, perc1, perc2, tempBegin, tempEnd, x;
 
         // console.clear();
+
+        if (prevScrollTop !== null) {
+
+            if (prevScrollTop > wBegin) {
+                scrollDirection = 'up';
+            } else if (prevScrollTop < wBegin) {
+                scrollDirection = 'down';
+            }
+
+        }
+
 
         /*
             Calculates the visibility and up space percentage for each page
@@ -118,20 +131,25 @@ var MosScrollApp = function (config) {
         */        
         for (x in prevPagesPercData) {            
             if (!pagesPercData.hasOwnProperty(x)) {
-                that.getPageBySlug(x).trigger('disappeared');
+                that.getPageBySlug(x).trigger('disappeared',{
+                    scrollDirection: scrollDirection
+                });
             }
         }
 
         for (x in pagesPercData) {
             if (!prevPagesPercData.hasOwnProperty(x)) {
-                that.getPageBySlug(x).trigger('appeared');
+                that.getPageBySlug(x).trigger('appeared',{
+                    scrollDirection: scrollDirection
+                });
             }
         }
 
         /*
-            Storing the current pagesPercData for further checks.
+            Storing the current pagesPercData for further checks. 
         */
         prevPagesPercData = pagesPercData;
+        prevScrollTop = wBegin;
     });
 
 };

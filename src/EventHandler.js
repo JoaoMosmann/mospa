@@ -1,13 +1,16 @@
 var EventHandler = function () {
     'use strict';
-    var events = [];
+    var events = {};
 
     this.bind = function (event, fn, one) {
         if (fn === undefined) {
             throw new Error('The second parameter of bind must be passed.');
         }
+        if (!events[event]) {
+            events[event] = [];
+        }
 
-        events.push({type: event, callback: fn, one: one});
+        events[event].push({callback: fn, one: one});
     };
 
     this.one = function (event, fn) {
@@ -15,16 +18,31 @@ var EventHandler = function () {
     };
 
     this.unbind = function (event, fn) {
-        var i;
-        for (i = 0; i < events.length; i += 1) {
-            if (events[i] !== null && events[i].type === event && (events[i].callback === fn || fn === undefined)) {
-                events[i] = null;
+        var i, l,
+            eventList = events[event];
+
+        if (!eventList) {
+            return false;
+        }
+
+        l = eventList.length;
+
+        for (i = 0; i < l; i += 1) {
+            if (eventList[i] !== null && (eventList[i].callback === fn || fn === undefined)) {
+                eventList[i] = null;
             }
         }
     };
 
     this.trigger = function (event, data) {
-        var e, r, i;
+        var e, r, i, l,
+            eventList = events[event];
+
+        if (!eventList) {
+            return false;
+        }
+
+        l = eventList.length;
 
         if (data === undefined) {
             data = {};
@@ -36,14 +54,14 @@ var EventHandler = function () {
             data: data
         };
 
-        for (i = 0; i < events.length; i += 1) {
+        for (i = 0; i < l; i += 1) {
             if (e.stopped) {
                 break;
             }
-            if (events[i] !== null && events[i].type === event) {
-                r = events[i].callback.call(this, e);
-                if (events[i].one) {
-                    events[i] = null;
+            if (eventList[i] !== null) {
+                r = eventList[i].callback.call(this, e);
+                if (eventList[i].one) {
+                    eventList[i] = null;
                 }
                 if (r === false) {
                     break;

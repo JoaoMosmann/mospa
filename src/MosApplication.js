@@ -54,8 +54,17 @@ var MosApplication = function (config) {
         return currentPage;
     };
 
+    this.setCurrentPageByHash = function (h) {
+        var page = this.getPageBySlug(h);
+
+        if (!!page) {
+            this.setCurrentPage(page);
+        }
+        
+    };
+
     this.setCurrentPage = function (p) {
-        this.trigger('pagechange', {
+        this.trigger('page_change', {
             oldPage: currentPage,
             newPage: p
         });

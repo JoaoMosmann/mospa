@@ -1,6 +1,7 @@
 var EventHandler = function () {
     'use strict';
-    var events = {};
+    var events = {},
+        hijackedEvents = {};
 
     this.bind = function (event, fn, one) {
         if (fn === undefined) {
@@ -38,12 +39,6 @@ var EventHandler = function () {
         var e, r, i, l,
             eventList = events[event];
 
-        if (!eventList) {
-            return false;
-        }
-
-        l = eventList.length;
-
         if (data === undefined) {
             data = {};
         }
@@ -53,6 +48,23 @@ var EventHandler = function () {
             stop: function () { this.stopped = true; },
             data: data
         };
+
+        if (!!hijackedEvents[event] && hijackedEvents[event].constructor === Function) {
+
+            delete e.stopped;
+            delete e.stop;
+            
+            hijackedEvents[event].call(this, e);
+
+            return true;
+        }
+
+        if (!eventList) {
+            return false;
+        }
+
+        l = eventList.length;
+
 
         for (i = 0; i < l; i += 1) {
             if (e.stopped) {
@@ -69,6 +81,18 @@ var EventHandler = function () {
             }
         }
     };
+
+    this.hijackEvent = function (event, fn) {
+
+        hijackedEvents[event] = fn;
+
+    }
+
+    this.freeEvent = function (event) {
+
+        hijackedEvents[event] = null;
+
+    }
 
 };;
 var MosApplication = function (config) {
@@ -127,8 +151,17 @@ var MosApplication = function (config) {
         return currentPage;
     };
 
+    this.setCurrentPageByHash = function (h) {
+        var page = this.getPageBySlug(h);
+
+        if (!!page) {
+            this.setCurrentPage(page);
+        }
+        
+    };
+
     this.setCurrentPage = function (p) {
-        this.trigger('pagechange', {
+        this.trigger('page_change', {
             oldPage: currentPage,
             newPage: p
         });
@@ -248,6 +281,11 @@ var MosScrollApp = function (config) {
                     };
                     o.end = o.begin + p[x].getDomElement().offsetHeight;
                     offsetCache[p[x].getSlug()] = o;
+
+                    p[x].offset = {
+                        topStart: o.begin,
+                        topEnd: o.end
+                    };
                 }
 
             } else if (page.constructor === MosPage) {
@@ -256,7 +294,12 @@ var MosScrollApp = function (config) {
                 };
                 o.end = o.begin + page.getDomElement().offsetHeight;
                 offsetCache[page.getSlug()] = o;
-            }
+
+                page.offset = {
+                    topStart: o.begin,
+                    topEnd: o.end
+                };
+            }            
         };
 
 
@@ -270,16 +313,13 @@ var MosScrollApp = function (config) {
             console.error('OffsetParent inconsistency! Some pages have different offsetParents.');
         }
 
-        doCacheOffsets.call(this, p);
+        p.offset = null;
+
+        doCacheOffsets.call(this, p);      
     });
 
-    this.bind('windowresize', function () {
+    this.calculateVisibility = function () {
 
-        doCacheOffsets.call(this);
-
-    });
-
-    window.addEventListener('scroll', function () {
         var wBegin = document.body.scrollTop,
             wEnd = wBegin + window.innerHeight,
             pagesPercData = {},
@@ -331,9 +371,6 @@ var MosScrollApp = function (config) {
                     visible: perc2
                 };
                     
-                // console.log(x);
-                // console.log(' - ', perc1);
-                // console.log(' - ', perc2);
             }
 
         }
@@ -356,14 +393,41 @@ var MosScrollApp = function (config) {
                 that.getPageBySlug(x).trigger('appeared',{
                     scrollDirection: scrollDirection
                 });
+                that.getPageBySlug(x).trigger('when_visible',{
+                    scrollDirection: scrollDirection,
+                    visibility: pagesPercData[x]
+                });
+            } else {
+
+                that.getPageBySlug(x).trigger('when_visible',{
+                    scrollDirection: scrollDirection,
+                    visibility: pagesPercData[x]
+                });
+
             }
         }
+
+        that.trigger('after_scroll',{
+            scrollDirection: scrollDirection,
+            visibility: pagesPercData
+        });
 
         /*
             Storing the current pagesPercData for further checks. 
         */
         prevPagesPercData = pagesPercData;
         prevScrollTop = wBegin;
+
+        return pagesPercData;
+    }   
+
+    window.addEventListener('resize', function () {
+        doCacheOffsets.call(that);
+        this.calculateVisibility();
+    });
+
+    window.addEventListener('scroll', function () {
+        that.calculateVisibility();
     });
 
 };

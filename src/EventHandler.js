@@ -1,6 +1,7 @@
 var EventHandler = function () {
     'use strict';
-    var events = {};
+    var events = {},
+        hijackedEvents = {};
 
     this.bind = function (event, fn, one) {
         if (fn === undefined) {
@@ -38,12 +39,6 @@ var EventHandler = function () {
         var e, r, i, l,
             eventList = events[event];
 
-        if (!eventList) {
-            return false;
-        }
-
-        l = eventList.length;
-
         if (data === undefined) {
             data = {};
         }
@@ -53,6 +48,23 @@ var EventHandler = function () {
             stop: function () { this.stopped = true; },
             data: data
         };
+
+        if (!!hijackedEvents[event] && hijackedEvents[event].constructor === Function) {
+
+            delete e.stopped;
+            delete e.stop;
+            
+            hijackedEvents[event].call(this, e);
+
+            return true;
+        }
+
+        if (!eventList) {
+            return false;
+        }
+
+        l = eventList.length;
+
 
         for (i = 0; i < l; i += 1) {
             if (e.stopped) {
@@ -69,5 +81,17 @@ var EventHandler = function () {
             }
         }
     };
+
+    this.hijackEvent = function (event, fn) {
+
+        hijackedEvents[event] = fn;
+
+    }
+
+    this.freeEvent = function (event) {
+
+        hijackedEvents[event] = null;
+
+    }
 
 };

@@ -34,6 +34,11 @@ var MosScrollApp = function (config) {
                     };
                     o.end = o.begin + p[x].getDomElement().offsetHeight;
                     offsetCache[p[x].getSlug()] = o;
+
+                    p[x].offset = {
+                        topStart: o.begin,
+                        topEnd: o.end
+                    };
                 }
 
             } else if (page.constructor === MosPage) {
@@ -42,7 +47,12 @@ var MosScrollApp = function (config) {
                 };
                 o.end = o.begin + page.getDomElement().offsetHeight;
                 offsetCache[page.getSlug()] = o;
-            }
+
+                page.offset = {
+                    topStart: o.begin,
+                    topEnd: o.end
+                };
+            }            
         };
 
 
@@ -56,16 +66,13 @@ var MosScrollApp = function (config) {
             console.error('OffsetParent inconsistency! Some pages have different offsetParents.');
         }
 
-        doCacheOffsets.call(this, p);
+        p.offset = null;
+
+        doCacheOffsets.call(this, p);      
     });
 
-    this.bind('windowresize', function () {
+    this.calculateVisibility = function () {
 
-        doCacheOffsets.call(this);
-
-    });
-
-    window.addEventListener('scroll', function () {
         var wBegin = document.body.scrollTop,
             wEnd = wBegin + window.innerHeight,
             pagesPercData = {},
@@ -117,9 +124,6 @@ var MosScrollApp = function (config) {
                     visible: perc2
                 };
                     
-                // console.log(x);
-                // console.log(' - ', perc1);
-                // console.log(' - ', perc2);
             }
 
         }
@@ -142,14 +146,41 @@ var MosScrollApp = function (config) {
                 that.getPageBySlug(x).trigger('appeared',{
                     scrollDirection: scrollDirection
                 });
+                that.getPageBySlug(x).trigger('when_visible',{
+                    scrollDirection: scrollDirection,
+                    visibility: pagesPercData[x]
+                });
+            } else {
+
+                that.getPageBySlug(x).trigger('when_visible',{
+                    scrollDirection: scrollDirection,
+                    visibility: pagesPercData[x]
+                });
+
             }
         }
+
+        that.trigger('after_scroll',{
+            scrollDirection: scrollDirection,
+            visibility: pagesPercData
+        });
 
         /*
             Storing the current pagesPercData for further checks. 
         */
         prevPagesPercData = pagesPercData;
         prevScrollTop = wBegin;
+
+        return pagesPercData;
+    }   
+
+    window.addEventListener('resize', function () {
+        doCacheOffsets.call(that);
+        this.calculateVisibility();
+    });
+
+    window.addEventListener('scroll', function () {
+        that.calculateVisibility();
     });
 
 };

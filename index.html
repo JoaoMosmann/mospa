@@ -20,7 +20,7 @@
 					var ignoreNextNavigation = false;
 
 					this.bind('page_change', function (e) {
-						
+						console.log(e);
 						var n = e.data.newPage,
 							o = e.data.oldPage,
 							oBt, nBt;
@@ -34,7 +34,14 @@
 						nBt.classList.add('activated');
 
 						if (!ignoreNextNavigation) { 
+
+							this.hijackEvent('after_scroll', function (e) {});
+
 							window.scroll(0, n.offset.topStart);
+
+							setTimeout(function () {
+								app.freeEvent('after_scroll');
+							}, 50);
 						}
 
 						ignoreNextNavigation = false;
@@ -137,20 +144,6 @@
 				
 				}
 			);			
-
-
-			// var pgs = app.getPages(),
-			// 	x, l = pgs.length;
-
-			// for (x = 0; x < l; x += 1) {
-
-			// 	pgs[x].bind('when_visible', function (e) {
-
-			// 		console.log(this.getSlug(), e.data.visibility);
-
-			// 	});
-
-			// }
 
 			app.setCurrentPageByHash(onloadHash.split('/').slice(1)[0]);
 

@@ -423,7 +423,7 @@ var MosScrollApp = function (config) {
 
     window.addEventListener('resize', function () {
         doCacheOffsets.call(that);
-        this.calculateVisibility();
+        that.calculateVisibility();
     });
 
     window.addEventListener('scroll', function () {

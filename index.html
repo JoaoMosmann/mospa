@@ -49,7 +49,8 @@
 
 					this.bind('after_scroll', function (e) {
 						var visibles = e.data.visibility,
-							bestX, x, l = visibles.length;
+							l = visibles.length,
+							bestX, x, newHash;
 
 						for (x in visibles) {
 
@@ -67,9 +68,11 @@
 
 						}
 
-						if(location.hash !== "#/" + bestX) {
+						newHash = "#/" + bestX;
+
+						if(location.hash.substring(0, newHash.length) !== newHash) {
 							ignoreNextNavigation = true;
-							location.hash = "#/" + bestX;
+							location.hash = newHash;
 						}
 						
 					});
@@ -219,6 +222,11 @@
 
 		<section id="products">
 			products
+			<br/><br/>
+			<a href="#/products/category1/prod1" class="bt">Show product 1</a>
+
+			<a href="#/products/category34/prod2" class="bt">Show product 2</a>
+
 		</section>
 
 		<section id="about-us">

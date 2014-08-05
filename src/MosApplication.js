@@ -1,6 +1,5 @@
-var MosApplication = function (config) {
-    'use strict';
-    EventHandler.call(this);
+mospa.MosApplication = function (config) {
+    mospa.EventHandler.call(this);
 
     var pages = [],
         thisApp = this,
@@ -11,7 +10,7 @@ var MosApplication = function (config) {
     this.addPage = function (p) {
         var x;
 
-        if (p.constructor !== MosPage) {
+        if (p.constructor !== mospa.MosPage) {
             throw new Error('The addPage first parameter must be a MosPage instance.');
         }
 
@@ -102,10 +101,9 @@ var MosApplication = function (config) {
 
 };
 
-MosApplication.prototype.createPage = function (config, constructor) {
-    'use strict';
+mospa.MosApplication.prototype.createPage = function (config, constructor) {
 
-    var page = new MosPage(config);
+    var page = new mospa.MosPage(config);
 
     if (typeof constructor === 'function') {
         constructor.call(page, config);

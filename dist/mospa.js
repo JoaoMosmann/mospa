@@ -1,5 +1,63 @@
-var EventHandler = function () {
-    'use strict';
+(function(window) {
+	'use strict';
+
+
+
+if (typeof Object.create !== 'function') {
+    (function () {
+        var F = function () {};
+        Object.create = function (o) {
+            if (arguments.length > 1) {
+                throw new Error('Second argument not supported');
+            }
+            if (o === null) {
+                throw new Error('Cannot set a null [[Prototype]]');
+            }
+            if (typeof o !== 'object') {
+                throw new TypeError('Argument must be an object');
+            }
+            F.prototype = o;
+            return new F();
+        };
+    }());
+}
+
+var mospa = (function () {
+    
+    return {
+        createApplication: function (type, id, constructor) {
+            var AppClass,
+                app,
+                config;
+
+            if (type === 'scrollapp') {
+                AppClass = mospa.MosScrollApp;
+            } else if (!!type && type.constructor === Function) {
+                /* With this you can implament your own kind of application flow. */
+                AppClass = type;
+            }
+
+            config = {
+                type: type,
+                id: id
+            };
+
+            app = new AppClass(config);
+
+            if (typeof constructor === 'function') {
+                constructor.call(app, config);
+            }
+
+            return app;
+
+
+        }
+    };
+
+}());
+
+window.mospa = mospa;
+mospa.EventHandler = function () {
     var events = {},
         hijackedEvents = {};
 
@@ -94,10 +152,9 @@ var EventHandler = function () {
 
     }
 
-};;
-var MosApplication = function (config) {
-    'use strict';
-    EventHandler.call(this);
+};
+mospa.MosApplication = function (config) {
+    mospa.EventHandler.call(this);
 
     var pages = [],
         thisApp = this,
@@ -108,7 +165,7 @@ var MosApplication = function (config) {
     this.addPage = function (p) {
         var x;
 
-        if (p.constructor !== MosPage) {
+        if (p.constructor !== mospa.MosPage) {
             throw new Error('The addPage first parameter must be a MosPage instance.');
         }
 
@@ -199,10 +256,9 @@ var MosApplication = function (config) {
 
 };
 
-MosApplication.prototype.createPage = function (config, constructor) {
-    'use strict';
+mospa.MosApplication.prototype.createPage = function (config, constructor) {
 
-    var page = new MosPage(config);
+    var page = new mospa.MosPage(config);
 
     if (typeof constructor === 'function') {
         constructor.call(page, config);
@@ -212,10 +268,9 @@ MosApplication.prototype.createPage = function (config, constructor) {
 
 
     return page;
-};;
-var MosPage = function (config) {
-    'use strict';
-    EventHandler.call(this);
+};
+mospa.MosPage = function (config) {
+    mospa.EventHandler.call(this);
 
     var slug,
         domElement;
@@ -244,9 +299,8 @@ var MosPage = function (config) {
     this.getDomElement = function () {
         return domElement;
     };
-};;
-var MosScrollApp = function (config) {
-    'use strict';
+};
+mospa.MosScrollApp = function (config) {
     this.constructor.call(this, config);
 
     var that = this,
@@ -288,7 +342,7 @@ var MosScrollApp = function (config) {
                     };
                 }
 
-            } else if (page.constructor === MosPage) {
+            } else if (page.constructor === mospa.MosPage) {
                 o = {
                     begin: extraOffset + page.getDomElement().offsetTop
                 };
@@ -432,54 +486,5 @@ var MosScrollApp = function (config) {
 
 };
 
-MosScrollApp.prototype = Object.create(MosApplication.prototype);;
-if (typeof Object.create !== 'function') {
-    (function () {
-        'use strict';
-        var F = function () {};
-        Object.create = function (o) {
-            if (arguments.length > 1) {
-                throw new Error('Second argument not supported');
-            }
-            if (o === null) {
-                throw new Error('Cannot set a null [[Prototype]]');
-            }
-            if (typeof o !== 'object') {
-                throw new TypeError('Argument must be an object');
-            }
-            F.prototype = o;
-            return new F();
-        };
-    }());
-}
-
-var mospa = (function () {
-    'use strict';
-    return {
-        createApplication: function (type, id, constructor) {
-            var AppClass,
-                app,
-                config;
-
-            if (type === 'scrollapp') {
-                AppClass = MosScrollApp;
-            }
-
-            config = {
-                type: type,
-                id: id
-            };
-
-            app = new AppClass(config);
-
-            if (typeof constructor === 'function') {
-                constructor.call(app, config);
-            }
-
-            return app;
-
-
-        }
-    };
-
-}());
+mospa.MosScrollApp.prototype = Object.create(mospa.MosApplication.prototype);
+})(this);

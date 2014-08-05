@@ -12,10 +12,18 @@ module.exports = function(grunt) {
 
     concat: {
   	  options: {
-  	    separator: ';\n'
+  	    separator: '\n'
   	  },
   	  dist: {
-  	    src: ['src/**/*'],
+  	    src: [
+          'src/wrap/begin.js', 
+          'src/main.js', 
+          'src/EventHandler.js', 
+          'src/MosApplication.js', 
+          'src/MosPage.js', 
+          'src/MosScrollApp.js', 
+          'src/wrap/end.js'
+        ],
   	    dest: 'dist/mospa.js'
   	  }
 	},
@@ -44,6 +52,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-jslint');
  
   grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['concat', 'uglify']);
   grunt.registerTask('hint', ['jshint']);
   grunt.registerTask('lint', ['jslint']);
 };

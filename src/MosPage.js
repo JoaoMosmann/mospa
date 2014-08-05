@@ -1,6 +1,5 @@
-var MosPage = function (config) {
-    'use strict';
-    EventHandler.call(this);
+mospa.MosPage = function (config) {
+    mospa.EventHandler.call(this);
 
     var slug,
         domElement;

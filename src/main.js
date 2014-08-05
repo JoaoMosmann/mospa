@@ -1,6 +1,5 @@
 if (typeof Object.create !== 'function') {
     (function () {
-        'use strict';
         var F = function () {};
         Object.create = function (o) {
             if (arguments.length > 1) {
@@ -19,7 +18,7 @@ if (typeof Object.create !== 'function') {
 }
 
 var mospa = (function () {
-    'use strict';
+    
     return {
         createApplication: function (type, id, constructor) {
             var AppClass,
@@ -27,7 +26,10 @@ var mospa = (function () {
                 config;
 
             if (type === 'scrollapp') {
-                AppClass = MosScrollApp;
+                AppClass = mospa.MosScrollApp;
+            } else if (!!type && type.constructor === Function) {
+                /* With this you can implament your own kind of application flow. */
+                AppClass = type;
             }
 
             config = {
@@ -48,3 +50,5 @@ var mospa = (function () {
     };
 
 }());
+
+window.mospa = mospa;

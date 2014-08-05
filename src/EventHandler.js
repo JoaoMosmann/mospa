@@ -1,5 +1,4 @@
-var EventHandler = function () {
-    'use strict';
+mospa.EventHandler = function () {
     var events = {},
         hijackedEvents = {};
 

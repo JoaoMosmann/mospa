@@ -1,5 +1,4 @@
-var MosScrollApp = function (config) {
-    'use strict';
+mospa.MosScrollApp = function (config) {
     this.constructor.call(this, config);
 
     var that = this,
@@ -41,7 +40,7 @@ var MosScrollApp = function (config) {
                     };
                 }
 
-            } else if (page.constructor === MosPage) {
+            } else if (page.constructor === mospa.MosPage) {
                 o = {
                     begin: extraOffset + page.getDomElement().offsetTop
                 };
@@ -185,4 +184,4 @@ var MosScrollApp = function (config) {
 
 };
 
-MosScrollApp.prototype = Object.create(MosApplication.prototype);
+mospa.MosScrollApp.prototype = Object.create(mospa.MosApplication.prototype);

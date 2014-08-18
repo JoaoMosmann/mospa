@@ -13,14 +13,11 @@ mospa.MosScrollApp = function (config) {
             is called very often.
         */
         doCacheOffsets = function (page) {
-            var x, l, p, o, 
-                tempParent = offsetParent, 
-                extraOffset = 0;
+            var x, l, p, o, pdom,
+                tempParent, 
+                extraOffset;
 
-            while (tempParent != document.body) {
-                extraOffset += tempParent.offsetTop;
-                tempParent = tempParent.offsetParent;
-            }    
+              
 
             if(!page) {
                 offsetCache = {};
@@ -28,23 +25,25 @@ mospa.MosScrollApp = function (config) {
                 l = p.length;
 
                 for (x = 0; x < l; x += 1) {
-                    o = {
-                        begin: extraOffset + p[x].getDomElement().offsetTop
-                    };
-                    o.end = o.begin + p[x].getDomElement().offsetHeight;
-                    offsetCache[p[x].getSlug()] = o;
-
-                    p[x].offset = {
-                        topStart: o.begin,
-                        topEnd: o.end
-                    };
+                    doCacheOffsets(p[x]);
                 }
 
             } else if (page.constructor === mospa.MosPage) {
+
+                pdom = page.getDomElement();
+
+                tempParent = pdom.offsetParent;
+                extraOffset = 0;
+
+                while (tempParent != offsetParent && tempParent != document.body) {
+                    extraOffset += tempParent.offsetTop;
+                    tempParent = tempParent.offsetParent;
+                }  
+
                 o = {
-                    begin: extraOffset + page.getDomElement().offsetTop
+                    begin: extraOffset + pdom.offsetTop
                 };
-                o.end = o.begin + page.getDomElement().offsetHeight;
+                o.end = o.begin + pdom.offsetHeight;
                 offsetCache[page.getSlug()] = o;
 
                 page.offset = {

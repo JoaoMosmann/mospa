@@ -71,7 +71,7 @@ mospa.EventHandler = function () {
             }
             if (eventList[i] !== null) {
                 r = eventList[i].callback.call(this, e);
-                if (eventList[i].one) {
+                if (!!eventList[i] && eventList[i].one) {
                     eventList[i] = null;
                 }
                 if (r === false) {

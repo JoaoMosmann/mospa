@@ -15,7 +15,11 @@
 
 			var onloadHash = location.hash;
 
-			window.app = mospa.createApplication('scrollapp', 'myapp',
+			var appConfig = {
+				offsetParent: document.body
+			}
+
+			window.app = mospa.createApplication('scrollapp', appConfig,
 				function(b){
 					var ignoreNextNavigation = false;
 
@@ -229,9 +233,11 @@
 
 		</section>
 
-		<section id="about-us">
-			about-us
-		</section>
+		<div style="position: relative;">
+			<section id="about-us">
+				about-us
+			</section>
+		</div>
 
 		<section id="contact">
 			contact

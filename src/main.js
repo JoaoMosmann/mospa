@@ -20,10 +20,12 @@ if (typeof Object.create !== 'function') {
 var mospa = (function () {
     
     return {
-        createApplication: function (type, id, constructor) {
+        createApplication: function (type, config, constructor) {
             var AppClass,
-                app,
-                config;
+                app;
+
+            !config && (config = {});
+            config.type = type;            
 
             if (type === 'scrollapp') {
                 AppClass = mospa.MosScrollApp;
@@ -32,11 +34,6 @@ var mospa = (function () {
                 AppClass = type;
             }
 
-            config = {
-                type: type,
-                id: id
-            };
-
             app = new AppClass(config);
 
             if (typeof constructor === 'function') {
@@ -44,8 +41,7 @@ var mospa = (function () {
             }
 
             return app;
-
-
+            
         }
     };
 

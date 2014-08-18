@@ -25,10 +25,12 @@ if (typeof Object.create !== 'function') {
 var mospa = (function () {
     
     return {
-        createApplication: function (type, id, constructor) {
+        createApplication: function (type, config, constructor) {
             var AppClass,
-                app,
-                config;
+                app;
+
+            !config && (config = {});
+            config.type = type;            
 
             if (type === 'scrollapp') {
                 AppClass = mospa.MosScrollApp;
@@ -37,11 +39,6 @@ var mospa = (function () {
                 AppClass = type;
             }
 
-            config = {
-                type: type,
-                id: id
-            };
-
             app = new AppClass(config);
 
             if (typeof constructor === 'function') {
@@ -49,8 +46,7 @@ var mospa = (function () {
             }
 
             return app;
-
-
+            
         }
     };
 
@@ -305,7 +301,7 @@ mospa.MosScrollApp = function (config) {
 
     var that = this,
         offsetCache = {},
-        offsetParent = null,
+        offsetParent = config.offsetParent || null,
         prevPagesPercData = {},
         prevScrollTop = null,
         /*
@@ -364,7 +360,7 @@ mospa.MosScrollApp = function (config) {
         if (offsetParent === null) {
             offsetParent = d.offsetParent;
         } else if (d.offsetParent !== offsetParent) {
-            console.error('OffsetParent inconsistency! Some pages have different offsetParents.');
+            console.warn('OffsetParent inconsistency! Some pages have different offsetParents. It can cost more process to calculate the pages visibility.');
         }
 
         p.offset = null;

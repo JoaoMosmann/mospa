@@ -26,11 +26,11 @@ var mospa = (function () {
     
     return {
         createApplication: function (type, config, constructor) {
-            var AppClass,
+            var AppClass = mospa.MosApplication,
                 app;
 
             !config && (config = {});
-            config.type = type;            
+            config.type = type;
 
             if (type === 'scrollapp') {
                 AppClass = mospa.MosScrollApp;
@@ -46,7 +46,7 @@ var mospa = (function () {
             }
 
             return app;
-            
+
         }
     };
 

@@ -1,14 +1,14 @@
-describe("A EventHandler", function() {
+describe("A mospa.EventHandler", function() {
   var object;
 
   beforeEach(function () {
-    object = new EventHandler();
+    object = new mospa.EventHandler();
   });
 
   it("should be able to BIND a function to a event", function() {
 
     object.bind('some_event', function () {
-    	console.log('Hey!');
+    	
     });
 
   });

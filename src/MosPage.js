@@ -1,3 +1,28 @@
+/**
+ * @module mospa
+ * @class mospa.MosPage
+ * @constructor
+ * @uses EventHandler
+ */
+
+/**
+ * @config config
+ * @type Object
+ * @required
+ */
+
+/**
+ * @config config.slug
+ * @type String
+ * @required
+ * Fuck you 
+ */
+
+/**
+ * @config config.domElement
+ * @type HTMLElement
+ * @required 
+ */
 mospa.MosPage = function (config) {
     mospa.EventHandler.call(this);
 
@@ -20,11 +45,31 @@ mospa.MosPage = function (config) {
     slug = config.slug;
     domElement = config.domElement;
 
-
+    /**
+     * Get pages slug.
+     * @method getSlug
+     * @return {String}
+     *
+     * @example Getting page slug
+     *
+     *     var pageSlug = pageInstance.getSlug();
+     *
+     */
     this.getSlug = function () {
         return slug;
     };
 
+    /**
+     * Get page's dom element.
+     * @method getDomElement
+     * @return {HTMLElement} Returns HTMLElement if available.
+     *
+     * @example Getting the page's dom element.
+     *
+     *     var domEl = pageInstance.getDomElement();
+     *     console.log(domEl.innerHTML);
+     *
+     */
     this.getDomElement = function () {
         return domElement;
     };

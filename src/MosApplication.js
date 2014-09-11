@@ -6,6 +6,9 @@ mospa.MosApplication = function (config) {
         currentHash = null,
         currentPage = null;
 
+    if (!config.history_mode) {
+        config.history_mode = 'location_hash';
+    }
 
     this.addPage = function (p) {
         var x;
@@ -70,31 +73,36 @@ mospa.MosApplication = function (config) {
         currentPage = p;
     };
 
-    window.addEventListener("hashchange", function () {
+    if (config.history_mode === 'location_hash') {
 
-        var newHash = location.hash.split('/').slice(1),
-            x;
+        window.addEventListener("hashchange", function () {
 
-        if (currentHash !== null && newHash.join('/') === currentHash.join('/')) {
-            // SAME HASH... SHOULD DO NOTHING.
+            var newHash = location.hash.split('/').slice(1),
+                x;
 
-        } else if (currentHash !== null && newHash[0] === currentHash[0]) {
-            // SAME PAGE. TRIGGER EVENT FOR THE PAGE
+            if (currentHash !== null && newHash.join('/') === currentHash.join('/')) {
+                // SAME HASH... SHOULD DO NOTHING.
 
-            currentPage.trigger('hashchange', newHash);
-        } else {
-            // A DIFFERENT PAGE. GO TO THIS PAGE.
-            for (x = 0; x < pages.length; x += 1) {
-                if (pages[x].getSlug() === newHash[0]) {
-                    currentHash = newHash;
-                    thisApp.setCurrentPage(pages[x]);
-                    break;
+            } else if (currentHash !== null && newHash[0] === currentHash[0]) {
+                // SAME PAGE. TRIGGER EVENT FOR THE PAGE
+
+                currentPage.trigger('hashchange', newHash);
+            } else {
+                // A DIFFERENT PAGE. GO TO THIS PAGE.
+                for (x = 0; x < pages.length; x += 1) {
+                    if (pages[x].getSlug() === newHash[0]) {
+                        currentHash = newHash;
+                        thisApp.setCurrentPage(pages[x]);
+                        break;
+                    }
                 }
+
             }
 
-        }
+        }, false);
+        
+    }
 
-    }, false);
 
 
 

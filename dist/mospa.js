@@ -53,10 +53,29 @@ var mospa = (function () {
 }());
 
 window.mospa = mospa;
+/**
+ * @module mospa
+ * @class mospa.EventHandler
+ * @constructor
+ */
 mospa.EventHandler = function () {
     var events = {},
         hijackedEvents = {};
 
+    /**
+     * Bind a function to a event namespace.
+     * @method bind
+     * @param {String} event Event namespace.
+     * @param {Function} fn Function to be called.
+     * @param {Boolean} one If true. Call function only once.
+     *
+     * @example Binding a function
+     *
+     *     myobj.bind('when_visible', function(e) {
+     *        
+     *     });
+     *
+     */
     this.bind = function (event, fn, one) {
         if (fn === undefined) {
             throw new Error('The second parameter of bind must be passed.');
@@ -68,10 +87,37 @@ mospa.EventHandler = function () {
         events[event].push({callback: fn, one: one});
     };
 
+    /**
+     * Shortcut for biding a function to a event namespace that is called only once.
+     * @method one
+     * @param {String} event Event namespace.
+     * @param {Function} fn Function to be called.
+     *
+     * @example Binding a function that is called only once.
+     *
+     *     myobj.one('when_visible', function(e) {
+     *        
+     *     });
+     *
+     */
     this.one = function (event, fn) {
         this.bind(event, fn, true);
     };
 
+    /**
+     * Unbind a function, or all function from a event namespace.
+     * @method unbind
+     * @param {String} event Event namespace.
+     * @param {Function} fn Function to be unbinded.
+     *
+     * @example unbinding a function
+     *
+     *     myobj.unbind('when_visible', myFunction);   
+     *
+     * @example unbinding all functions from the event namespace in the object.
+     *
+     *     myobj.unbind('when_visible');   
+     */
     this.unbind = function (event, fn) {
         var i, l,
             eventList = events[event];
@@ -89,6 +135,17 @@ mospa.EventHandler = function () {
         }
     };
 
+    /**
+     * Triggers the event namespace, and call all related functions.
+     * @method trigger
+     * @param {String} event Event namespace.
+     * @param {Object} data Data to passed to the binded functions through the triggering.
+     *
+     * @example Triggering a event
+     *
+     *     myobj.trigger('when_visible');   
+     *
+     */
     this.trigger = function (event, data) {
         var e, r, i, l,
             eventList = events[event];
@@ -136,12 +193,35 @@ mospa.EventHandler = function () {
         }
     };
 
+    /**
+     * Hijack the event namespace. Making all triggers to call the passed function instead of binded functions, until the event namespace is freed by calling EventHandler.freeEvent
+     * @method hijackEvent
+     * @param {String} event Event namespace.
+     * @param {Function} fn Function to be called instead of the binded functions.
+     *
+     * @example Hijacking a event
+     *
+     *     myobj.hijackEvent('when_visible', function(){ 
+     *         // Now only me knows that you're visible
+     *     });   
+     *
+     */
     this.hijackEvent = function (event, fn) {
 
         hijackedEvents[event] = fn;
 
     }
 
+    /**
+     * Free a hijacked event.
+     * @method freeEvent
+     * @param {String} event Event namespace.
+     *
+     * @example Freeing a event
+     *
+     *     myobj.freeEvent('when_visible');
+     *
+     */
     this.freeEvent = function (event) {
 
         hijackedEvents[event] = null;
@@ -157,6 +237,9 @@ mospa.MosApplication = function (config) {
         currentHash = null,
         currentPage = null;
 
+    if (!config.history_mode) {
+        config.history_mode = 'location_hash';
+    }
 
     this.addPage = function (p) {
         var x;
@@ -221,31 +304,36 @@ mospa.MosApplication = function (config) {
         currentPage = p;
     };
 
-    window.addEventListener("hashchange", function () {
+    if (config.history_mode === 'location_hash') {
 
-        var newHash = location.hash.split('/').slice(1),
-            x;
+        window.addEventListener("hashchange", function () {
 
-        if (currentHash !== null && newHash.join('/') === currentHash.join('/')) {
-            // SAME HASH... SHOULD DO NOTHING.
+            var newHash = location.hash.split('/').slice(1),
+                x;
 
-        } else if (currentHash !== null && newHash[0] === currentHash[0]) {
-            // SAME PAGE. TRIGGER EVENT FOR THE PAGE
+            if (currentHash !== null && newHash.join('/') === currentHash.join('/')) {
+                // SAME HASH... SHOULD DO NOTHING.
 
-            currentPage.trigger('hashchange', newHash);
-        } else {
-            // A DIFFERENT PAGE. GO TO THIS PAGE.
-            for (x = 0; x < pages.length; x += 1) {
-                if (pages[x].getSlug() === newHash[0]) {
-                    currentHash = newHash;
-                    thisApp.setCurrentPage(pages[x]);
-                    break;
+            } else if (currentHash !== null && newHash[0] === currentHash[0]) {
+                // SAME PAGE. TRIGGER EVENT FOR THE PAGE
+
+                currentPage.trigger('hashchange', newHash);
+            } else {
+                // A DIFFERENT PAGE. GO TO THIS PAGE.
+                for (x = 0; x < pages.length; x += 1) {
+                    if (pages[x].getSlug() === newHash[0]) {
+                        currentHash = newHash;
+                        thisApp.setCurrentPage(pages[x]);
+                        break;
+                    }
                 }
+
             }
 
-        }
+        }, false);
+        
+    }
 
-    }, false);
 
 
 
@@ -265,6 +353,31 @@ mospa.MosApplication.prototype.createPage = function (config, constructor) {
 
     return page;
 };
+/**
+ * @module mospa
+ * @class mospa.MosPage
+ * @constructor
+ * @uses EventHandler
+ */
+
+/**
+ * @config config
+ * @type Object
+ * @required
+ */
+
+/**
+ * @config config.slug
+ * @type String
+ * @required
+ * Fuck you 
+ */
+
+/**
+ * @config config.domElement
+ * @type HTMLElement
+ * @required 
+ */
 mospa.MosPage = function (config) {
     mospa.EventHandler.call(this);
 
@@ -287,11 +400,31 @@ mospa.MosPage = function (config) {
     slug = config.slug;
     domElement = config.domElement;
 
-
+    /**
+     * Get pages slug.
+     * @method getSlug
+     * @return {String}
+     *
+     * @example Getting page slug
+     *
+     *     var pageSlug = pageInstance.getSlug();
+     *
+     */
     this.getSlug = function () {
         return slug;
     };
 
+    /**
+     * Get page's dom element.
+     * @method getDomElement
+     * @return {HTMLElement} Returns HTMLElement if available.
+     *
+     * @example Getting the page's dom element.
+     *
+     *     var domEl = pageInstance.getDomElement();
+     *     console.log(domEl.innerHTML);
+     *
+     */
     this.getDomElement = function () {
         return domElement;
     };

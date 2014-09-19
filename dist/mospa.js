@@ -34,6 +34,8 @@ var mospa = (function () {
 
             if (type === 'scrollapp') {
                 AppClass = mospa.MosScrollApp;
+            } else if (type === 'slideapp') {
+                AppClass = mospa.MosSlideApp;
             } else if (!!type && type.constructor === Function) {
                 /* With this you can implament your own kind of application flow. */
                 AppClass = type;
@@ -610,4 +612,33 @@ mospa.MosScrollApp = function (config) {
 };
 
 mospa.MosScrollApp.prototype = Object.create(mospa.MosApplication.prototype);
+mospa.MosSlideApp = function (config) {
+    this.constructor.call(this, config);
+
+    var self = this,
+        wrapper = config.wrapper || window;
+
+
+    this.bind('pageadded', function (e) {
+        var p = e.data.page,
+            d = p.getDomElement();
+
+    });
+
+    function scrollPage(e) {
+        
+    }
+
+    function mouseWheelHandler (e) { 
+        console.log(e);
+        var delta = e.wheelDeltaY || e.wheelDelta || e.deltaY;
+        console.log(delta);
+    }
+
+    console.log(wrapper);
+    document.body.addEventListener('mousewheel', mouseWheelHandler);
+    document.body.addEventListener('DOMMouseScroll', mouseWheelHandler);
+};
+
+mospa.MosSlideApp.prototype = Object.create(mospa.MosApplication.prototype);
 })(this);

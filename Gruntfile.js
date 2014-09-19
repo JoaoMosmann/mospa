@@ -23,6 +23,7 @@ module.exports = function(grunt) {
           'src/MosApplication.js', 
           'src/MosPage.js', 
           'src/MosScrollApp.js', 
+          'src/MosSlideApp.js', 
           'src/wrap/end.js'
         ],
   	    dest: 'dist/mospa.js'

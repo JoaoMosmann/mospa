@@ -15,11 +15,32 @@
 
 			var onloadHash = location.hash;
 
-			var appConfig = {
-				offsetParent: document.getElementById('pageContainer')
+			var slideAppConfig = {
+				wrapper: document.getElementById('slidePagesContainer')
 			}
 
-			window.app = mospa.createApplication('scrollapp', appConfig,
+			window.slideApp = mospa.createApplication('slideapp', slideAppConfig,
+				function(b){
+					var ignoreNextNavigation = false;
+
+					console.log('aeho', this);
+
+					this.bind('page_change', function (e) {
+
+						var n = e.data.newPage,
+							o = e.data.oldPage,
+							oBt, nBt;
+
+						console.log(o,n);
+
+					});
+			});
+
+			var scrollAppConfig = {
+				offsetParent: document.getElementById('scrollPagesContainer')
+			}
+
+			window.scrollApp = mospa.createApplication('scrollapp', scrollAppConfig,
 				function(b){
 					var ignoreNextNavigation = false;
 
@@ -44,7 +65,7 @@
 							window.scroll(0, n.offset.topStart);
 
 							setTimeout(function () {
-								app.freeEvent('after_scroll');
+								scrollApp.freeEvent('after_scroll');
 							}, 50);
 						}
 
@@ -84,7 +105,7 @@
 				}
 			);
 
-			app.createPage(
+			scrollApp.createPage(
 				{
 					slug		: "home", 
 					domElement	: document.getElementById('home')
@@ -112,7 +133,7 @@
 			);
 
 
-			window.prodPage = app.createPage(
+			window.prodPage = scrollApp.createPage(
 				{
 					slug		: "products", 
 					domElement	: document.getElementById('products')
@@ -128,7 +149,7 @@
 				console.log(e);
 			})
 
-			app.createPage(
+			scrollApp.createPage(
 				{
 					slug		: "about-us", 
 					domElement	: document.getElementById('about-us')
@@ -140,7 +161,7 @@
 				}
 			);
 
-			app.createPage(
+			scrollApp.createPage(
 				{
 					slug		: "contact", 
 					domElement	: document.getElementById('contact')
@@ -152,7 +173,7 @@
 				}
 			);			
 
-			app.setCurrentPageByHash(onloadHash.split('/').slice(1)[0]);
+			scrollApp.setCurrentPageByHash(onloadHash.split('/').slice(1)[0]);
 
 
 		});
@@ -164,6 +185,12 @@
 
 	</script>
 	<style>
+		
+		html, body {
+			margin: 0;
+			height: 100%;
+			overflow: hidden;
+		}
 
 		header {
 			position: fixed;
@@ -178,7 +205,7 @@
 			display: block;
 		}
 
-		footer, #pageContainer>*{
+		footer, .container>*{
 			width: 500px;
 			background:black;
 			outline:2px solid red;
@@ -190,11 +217,10 @@
 			padding: 50px;
 		}
 		
-		#pageContainer {
-			margin: 30px 0;
-			border: 3px solid red;
-			height: 500px;
-			width: 600px;
+		.container {
+			outline: 3px dotted red;
+			height: 100%;
+			width: 100%;
 			overflow-y:scroll;
 		}
 
@@ -206,6 +232,16 @@
 		.bt {display:inline-block;border:1px solid red; line-height:50px;background:#999;cursor:pointer;text-decoration:none;padding:0 10px;color:#FFF;}
 		.bt:hover{color:#F00;}
 		.bt.activated{background:#333;border-color:green;}
+		
+
+		#slidePagesContainer {
+			overflow: hidden;
+		}
+
+		#slidePagesContainer>section {
+			height: 100%;
+		}
+
 
 	</style>
 </head>
@@ -222,8 +258,29 @@
 
 
 	</header>
+	
+	<div id="slidePagesContainer" class="container" style="position:relative">
+		
+		<section id="intro">
+			intro
+			
+		</section>
 
-	<div id="pageContainer" style="position:relative">
+		<section id="how-it-works">
+			how-it-works
+			<br/>
+			<span class="bt">Go to Contacts</span>
+
+		</section>
+
+		<section id="why-use-it">
+			why-use-it
+		</section>
+
+
+	</div>
+
+	<div id="scrollPagesContainer" class="container" style="position:relative">
 
 		<section id="home">
 			home
@@ -248,12 +305,14 @@
 		<section id="contact">
 			contact
 		</section>
+		
+		<footer>
+			footer
+		</footer>
 
 	</div>
 
-	<footer>
-		footer
-	</footer>
+	
 
 
 </body>

@@ -29,6 +29,8 @@ var mospa = (function () {
 
             if (type === 'scrollapp') {
                 AppClass = mospa.MosScrollApp;
+            } else if (type === 'slideapp') {
+                AppClass = mospa.MosSlideApp;
             } else if (!!type && type.constructor === Function) {
                 /* With this you can implament your own kind of application flow. */
                 AppClass = type;

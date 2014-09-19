@@ -434,7 +434,8 @@ mospa.MosScrollApp = function (config) {
 
     var that = this,
         offsetCache = {},
-        offsetParent = config.offsetParent || null,
+        offsetParent = config.offsetParent || window,
+        offsetParentHeight = 0,
         prevPagesPercData = {},
         prevScrollTop = null,
         /*
@@ -448,7 +449,7 @@ mospa.MosScrollApp = function (config) {
                 tempParent, 
                 extraOffset;
 
-              
+            offsetParentHeight = (offsetParent.offsetHeight || offsetParent.innerHeight || 0);
 
             if(!page) {
                 offsetCache = {};
@@ -463,12 +464,12 @@ mospa.MosScrollApp = function (config) {
 
                 pdom = page.getDomElement();
 
-                tempParent = pdom.offsetParent;
+                tempParent = pdom.offsetParent || window;
                 extraOffset = 0;
 
-                while (tempParent != offsetParent && tempParent != document.body) {
-                    extraOffset += tempParent.offsetTop;
-                    tempParent = tempParent.offsetParent;
+                while (tempParent != offsetParent && tempParent != window) {
+                    extraOffset += tempParent.offsetTop || 0;
+                    tempParent = tempParent.offsetParent || window;
                 }  
 
                 o = {
@@ -487,13 +488,7 @@ mospa.MosScrollApp = function (config) {
 
     this.bind('pageadded', function (e) {
         var p = e.data.page,
-            d = p.getDomElement();        
-
-        if (offsetParent === null) {
-            offsetParent = d.offsetParent;
-        } else if (d.offsetParent !== offsetParent) {
-            console.warn('OffsetParent inconsistency! Some pages have different offsetParents. It can cost more process to calculate the pages visibility.');
-        }
+            d = p.getDomElement();
 
         p.offset = null;
 
@@ -502,13 +497,11 @@ mospa.MosScrollApp = function (config) {
 
     this.calculateVisibility = function () {
 
-        var wBegin = document.body.scrollTop,
-            wEnd = wBegin + window.innerHeight,
+        var wBegin = offsetParent.scrollTop || offsetParent.scrollY || 0,
+            wEnd = wBegin + offsetParentHeight,
             pagesPercData = {},
             scrollDirection = 'stopped',
             cBegin, cEnd, perc1, perc2, tempBegin, tempEnd, x;
-
-        // console.clear();
 
         if (prevScrollTop !== null) {
 
@@ -608,9 +601,11 @@ mospa.MosScrollApp = function (config) {
         that.calculateVisibility();
     });
 
-    window.addEventListener('scroll', function () {
+    offsetParent.addEventListener('scroll', function () {
         that.calculateVisibility();
     });
+
+    this.recalcOffsets = doCacheOffsets;
 
 };
 

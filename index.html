@@ -16,7 +16,7 @@
 			var onloadHash = location.hash;
 
 			var appConfig = {
-				offsetParent: document.body
+				offsetParent: document.getElementById('pageContainer')
 			}
 
 			window.app = mospa.createApplication('scrollapp', appConfig,
@@ -24,7 +24,7 @@
 					var ignoreNextNavigation = false;
 
 					this.bind('page_change', function (e) {
-						console.log(e);
+						
 						var n = e.data.newPage,
 							o = e.data.oldPage,
 							oBt, nBt;
@@ -188,6 +188,14 @@
 			text-align: center;
 			box-sizing: border-box;
 			padding: 50px;
+		}
+		
+		#pageContainer {
+			margin: 30px 0;
+			border: 3px solid red;
+			height: 500px;
+			width: 600px;
+			overflow-y:scroll;
 		}
 
 		#home {height:400px;}

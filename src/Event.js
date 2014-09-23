@@ -14,6 +14,16 @@ mospa.Event = function (type, data, context, eventList) {
 	this.context = context;
 }
 
+/**
+ * Dispatch the event to all related functions.
+ * @method dispatchEvent
+ * @param {Number} startAt Call functions starting from this index.
+ *
+ * @example Dispatching a event.
+ *
+ *     myEventObject.dispatchEvent();   
+ *
+ */
 mospa.Event.prototype.dispatchEvent = function (startAt) {
 
 	var l = this.eventList.length,
@@ -24,7 +34,7 @@ mospa.Event.prototype.dispatchEvent = function (startAt) {
             break;
         }
         if (this.isFreezed) {
-            this.freezedAt = i;
+            this. = i;
             break;
         }
         if (this.eventList[i] !== null) {
@@ -40,14 +50,41 @@ mospa.Event.prototype.dispatchEvent = function (startAt) {
 
 }
 
+/**
+ * Stop the propagation. No function will be called after this being called.
+ * @method stop
+ *
+ * @example Stoping the event propagation.
+ *
+ *     myEventObject.stop();   
+ *
+ */
 mospa.Event.prototype.stop = function () {
 	this.isStopped = true;
 }
 
+/**
+ * Freezes the event propagations. Like the stop function, but it can be unfreezed to continue the propagation.
+ * @method freeze
+ *
+ * @example Freezing the event propagation.
+ *
+ *     myEventObject.freeze();   
+ *
+ */
 mospa.Event.prototype.freeze = function () {
 	this.isFreezed = true;
 }
 
+/**
+ * Unfreezes the freezed event propagation. It'll continue to call the functions from the freezing point.
+ * @method unfreeze
+ *
+ * @example Unfreezing a event.
+ *
+ *     myEventObject.unfreeze();   
+ *
+ */
 mospa.Event.prototype.unfreeze = function () {
 	this.isFreezed = false;
     this.dispatchEvent(this.freezedAt);

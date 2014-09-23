@@ -143,7 +143,94 @@ describe("A mospa.EventHandler", function() {
 
   });
 
-  describe("Some more complex behaviors", function() {
+  describe("During a event freezing", function() {
+
+    it("a function BINDED should be called after the unfreeze if it comes after the freezing callback", function(done) {
+
+      var myCounter = 10;
+
+      var fn1 = function (e) {
+        myCounter += myCounter * 1;
+      }
+
+      var fn2 = function (e) {
+        e.freeze();
+
+        object.bind('some_event', fnToBebinded);
+
+        setTimeout(function () {
+
+          myCounter += myCounter * 2;
+
+          e.unfreeze();
+
+        },50);
+
+      }
+
+      var fn3 = function (e) {
+        myCounter += 5;        
+      }
+
+      var fnToBebinded = function (e) {
+        myCounter += 100;
+
+        expect(myCounter).toEqual(165);
+        done();
+      }
+
+      object.bind('some_event', fn1);
+      object.bind('some_event', fn2);      
+      object.bind('some_event', fn3);
+
+      object.trigger('some_event');
+      
+
+    });
+
+    it("a function UNBINDED shouldn't be called after the unfreeze if it comes after the freezing callback", function(done) {
+
+      var myCounter = 10;
+
+      var fn1 = function (e) {
+        myCounter += myCounter * 1;
+      }
+
+      var fn2 = function (e) {
+        e.freeze();
+
+        object.unbind('some_event', fnToBeUnbinded);
+
+        setTimeout(function () {
+
+          myCounter += myCounter * 2;
+
+          e.unfreeze();
+
+        },50);
+
+      }
+
+      var fnToBeUnbinded = function (e) {
+        myCounter += 100;
+      }
+
+      var fn3 = function (e) {
+        myCounter += 5;
+
+        expect(myCounter).toEqual(65);
+        done();
+      }
+
+      object.bind('some_event', fn1);
+      object.bind('some_event', fn2);
+      object.bind('some_event', fnToBeUnbinded);
+      object.bind('some_event', fn3);
+
+      object.trigger('some_event');
+      
+
+    });
 
   });
 

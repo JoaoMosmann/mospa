@@ -1,0 +1,367 @@
+{
+    "project": {
+        "name": "mospa",
+        "description": "A simple SinglePageApplication framework",
+        "version": "0.1.0",
+        "url": "https://github.com/JoaoMosmann/mospa",
+        "nocode": "true",
+        "themedir": "yuidoc-theme"
+    },
+    "files": {
+        "src/Event.js": {
+            "name": "src/Event.js",
+            "modules": {
+                "mospa": 1
+            },
+            "classes": {
+                "mospa.Event": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/EventHandler.js": {
+            "name": "src/EventHandler.js",
+            "modules": {},
+            "classes": {
+                "mospa.EventHandler": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/MosPage.js": {
+            "name": "src/MosPage.js",
+            "modules": {},
+            "classes": {
+                "mospa.MosPage": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "mospa": {
+            "name": "mospa",
+            "submodules": {},
+            "classes": {
+                "mospa.Event": 1,
+                "mospa.EventHandler": 1,
+                "mospa.MosPage": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/MosPage.js",
+            "line": 1,
+            "is_constructor": 1,
+            "uses": [
+                "EventHandler"
+            ]
+        }
+    },
+    "classes": {
+        "mospa.Event": {
+            "name": "mospa.Event",
+            "shortname": "mospa.Event",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "mospa",
+            "namespace": "",
+            "file": "src/Event.js",
+            "line": 1
+        },
+        "mospa.EventHandler": {
+            "name": "mospa.EventHandler",
+            "shortname": "mospa.EventHandler",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "mospa",
+            "namespace": "",
+            "file": "src/EventHandler.js",
+            "line": 1
+        },
+        "mospa.MosPage": {
+            "name": "mospa.MosPage",
+            "shortname": "mospa.MosPage",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "mospa",
+            "namespace": "",
+            "file": "src/MosPage.js",
+            "line": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/Event.js",
+            "line": 17,
+            "description": "Dispatch the event to all related functions.",
+            "itemtype": "method",
+            "name": "dispatchEvent",
+            "params": [
+                {
+                    "name": "startAt",
+                    "description": "Call functions starting from this index.",
+                    "type": "Number"
+                }
+            ],
+            "example": [
+                " Dispatching a event.\n\n    myEventObject.dispatchEvent();   \n"
+            ],
+            "class": "mospa.Event",
+            "module": "mospa"
+        },
+        {
+            "file": "src/Event.js",
+            "line": 53,
+            "description": "Stop the propagation. No function will be called after this being called.",
+            "itemtype": "method",
+            "name": "stop",
+            "example": [
+                " Stoping the event propagation.\n\n    myEventObject.stop();   \n"
+            ],
+            "class": "mospa.Event",
+            "module": "mospa"
+        },
+        {
+            "file": "src/Event.js",
+            "line": 66,
+            "description": "Freezes the event propagations. Like the stop function, but it can be unfreezed to continue the propagation.",
+            "itemtype": "method",
+            "name": "freeze",
+            "example": [
+                " Freezing the event propagation.\n\n    myEventObject.freeze();   \n"
+            ],
+            "class": "mospa.Event",
+            "module": "mospa"
+        },
+        {
+            "file": "src/Event.js",
+            "line": 79,
+            "description": "Unfreezes the freezed event propagation. It'll continue to call the functions from the freezing point.",
+            "itemtype": "method",
+            "name": "unfreeze",
+            "example": [
+                " Unfreezing a event.\n\n    myEventObject.unfreeze();   \n"
+            ],
+            "class": "mospa.Event",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 10,
+            "description": "Bind a function to a event namespace.",
+            "itemtype": "method",
+            "name": "bind",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "Function to be called.",
+                    "type": "Function"
+                },
+                {
+                    "name": "one",
+                    "description": "If true. Call function only once.",
+                    "type": "Boolean"
+                }
+            ],
+            "example": [
+                " Binding a function\n\n    myobj.bind('when_visible', function(e) {\n       \n    });\n"
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 35,
+            "description": "Shortcut for biding a function to a event namespace that is called only once.",
+            "itemtype": "method",
+            "name": "one",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "Function to be called.",
+                    "type": "Function"
+                }
+            ],
+            "example": [
+                " Binding a function that is called only once.\n\n    myobj.one('when_visible', function(e) {\n       \n    });\n"
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 52,
+            "description": "Unbind a function, or all function from a event namespace.",
+            "itemtype": "method",
+            "name": "unbind",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "Function to be unbinded.",
+                    "type": "Function"
+                }
+            ],
+            "example": [
+                " unbinding a function\n\n    myobj.unbind('when_visible', myFunction);   ",
+                " unbinding all functions from the event namespace in the object.\n\n    myobj.unbind('when_visible');   "
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 83,
+            "description": "Triggers the event namespace, and call all related functions.",
+            "itemtype": "method",
+            "name": "trigger",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "Data to passed to the binded functions through the triggering.",
+                    "type": "Object"
+                }
+            ],
+            "example": [
+                " Triggering a event\n\n    myobj.trigger('when_visible');   \n"
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 122,
+            "description": "Hijack the event namespace. Making all triggers to call the passed function instead of binded functions, until the event namespace is freed by calling EventHandler.freeEvent",
+            "itemtype": "method",
+            "name": "hijackEvent",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                },
+                {
+                    "name": "fn",
+                    "description": "Function to be called instead of the binded functions.",
+                    "type": "Function"
+                }
+            ],
+            "example": [
+                " Hijacking a event\n\n    myobj.hijackEvent('when_visible', function(){ \n        // Now only me knows that you're visible\n    });   \n"
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/EventHandler.js",
+            "line": 141,
+            "description": "Free a hijacked event.",
+            "itemtype": "method",
+            "name": "freeEvent",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "Event namespace.",
+                    "type": "String"
+                }
+            ],
+            "example": [
+                " Freeing a event\n\n    myobj.freeEvent('when_visible');\n"
+            ],
+            "class": "mospa.EventHandler",
+            "module": "mospa"
+        },
+        {
+            "file": "src/MosPage.js",
+            "line": 8,
+            "itemtype": "config",
+            "name": "config",
+            "type": "Object",
+            "required": 1,
+            "class": "mospa.MosPage",
+            "module": "mospa"
+        },
+        {
+            "file": "src/MosPage.js",
+            "line": 14,
+            "itemtype": "config",
+            "name": "config.slug",
+            "type": "String",
+            "required": "Fuck you",
+            "class": "mospa.MosPage",
+            "module": "mospa"
+        },
+        {
+            "file": "src/MosPage.js",
+            "line": 21,
+            "itemtype": "config",
+            "name": "config.domElement",
+            "type": "HTMLElement",
+            "required": 1,
+            "class": "mospa.MosPage",
+            "module": "mospa"
+        },
+        {
+            "file": "src/MosPage.js",
+            "line": 48,
+            "description": "Get pages slug.",
+            "itemtype": "method",
+            "name": "getSlug",
+            "return": {
+                "description": "",
+                "type": "String"
+            },
+            "example": [
+                " Getting page slug\n\n    var pageSlug = pageInstance.getSlug();\n"
+            ],
+            "class": "mospa.MosPage",
+            "module": "mospa"
+        },
+        {
+            "file": "src/MosPage.js",
+            "line": 62,
+            "description": "Get page's dom element.",
+            "itemtype": "method",
+            "name": "getDomElement",
+            "return": {
+                "description": "Returns HTMLElement if available.",
+                "type": "HTMLElement"
+            },
+            "example": [
+                " Getting the page's dom element.\n\n    var domEl = pageInstance.getDomElement();\n    console.log(domEl.innerHTML);\n"
+            ],
+            "class": "mospa.MosPage",
+            "module": "mospa"
+        }
+    ],
+    "warnings": []
+}

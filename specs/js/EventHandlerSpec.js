@@ -78,19 +78,19 @@ describe("A mospa.EventHandler", function() {
 
   it("should be able to UNBIND a specific function from a event", function() {
 
-  	var myCounter = 0;
+    var myCounter = 0;
 
-  	var fn1 = function (e) {
-  		myCounter += e.data.add * 1;
-  	}
+    var fn1 = function (e) {
+      myCounter += e.data.add * 1;
+    }
 
-  	var fn2 = function (e) {
-  		myCounter += e.data.add * 2;
-  	}
+    var fn2 = function (e) {
+      myCounter += e.data.add * 2;
+    }
 
-  	var fn3 = function (e) {
-  		myCounter += e.data.add * 3;
-  	}
+    var fn3 = function (e) {
+      myCounter += e.data.add * 3;
+    }
 
     object.bind('some_event', fn1);
     object.bind('some_event', fn2);
@@ -106,5 +106,45 @@ describe("A mospa.EventHandler", function() {
 
   });
 
+  it("should be able to FREEZE an event during it's trigger", function(done) {
+
+    var myCounter = 10;
+
+    var fn1 = function (e) {
+      myCounter += myCounter * 1;
+    }
+
+    var fn2 = function (e) {
+      e.freeze();
+
+      setTimeout(function () {
+
+        myCounter += myCounter * 2;
+
+        e.unfreeze();
+
+      },50);
+
+    }
+
+    var fn3 = function (e) {
+      myCounter += 100;
+
+      expect(myCounter).toEqual(160);
+      done();
+    }
+
+    object.bind('some_event', fn1);
+    object.bind('some_event', fn2);
+    object.bind('some_event', fn3);
+
+    object.trigger('some_event');
+    
+
+  });
+
+  describe("Some more complex behaviors", function() {
+
+  });
 
 });

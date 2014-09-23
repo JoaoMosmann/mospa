@@ -57,6 +57,53 @@ var mospa = (function () {
 window.mospa = mospa;
 /**
  * @module mospa
+ * @class mospa.Event
+ * @constructor
+ */
+mospa.Event = function (type, data, context, eventList) {
+
+	this.type = type;
+	this.data = data;
+	this.stopped = false;
+	this.eventList = eventList;
+	this.context = context;
+}
+
+mospa.Event.prototype.dispatchEvent = function () {
+
+	var l = this.eventList.length,
+		i, r;
+
+    for (i = 0; i < l; i += 1) {
+        if (this.stopped) {
+            break;
+        }
+        if (this.eventList[i] !== null) {
+            r = this.eventList[i].callback.call(this.context, this);
+            if (!!this.eventList[i] && this.eventList[i].one) {
+                this.eventList[i] = null;
+            }
+            if (r === false) {
+                break;
+            }
+        }
+    }
+
+}
+
+mospa.Event.prototype.stop = function () {
+	this.stopped = true;
+}
+
+mospa.Event.prototype.freeze = function () {
+	
+}
+
+mospa.Event.prototype.unfreeze = function () {
+	
+}
+/**
+ * @module mospa
  * @class mospa.EventHandler
  * @constructor
  */
@@ -149,21 +196,17 @@ mospa.EventHandler = function () {
      *
      */
     this.trigger = function (event, data) {
-        var e, r, i, l,
-            eventList = events[event];
+        var e, eventList = events[event];
 
         if (data === undefined) {
             data = {};
         }
 
-        e = {
-            stopped: false,
-            stop: function () { this.stopped = true; },
-            data: data
-        };
+        e = new mospa.Event(event, data, this, eventList);
 
         if (!!hijackedEvents[event] && hijackedEvents[event].constructor === Function) {
 
+            // Check if this is really needed.
             delete e.stopped;
             delete e.stop;
             
@@ -176,23 +219,8 @@ mospa.EventHandler = function () {
             return false;
         }
 
-        l = eventList.length;
 
-
-        for (i = 0; i < l; i += 1) {
-            if (e.stopped) {
-                break;
-            }
-            if (eventList[i] !== null) {
-                r = eventList[i].callback.call(this, e);
-                if (!!eventList[i] && eventList[i].one) {
-                    eventList[i] = null;
-                }
-                if (r === false) {
-                    break;
-                }
-            }
-        }
+        e.dispatchEvent();
     };
 
     /**
@@ -636,8 +664,8 @@ mospa.MosSlideApp = function (config) {
     }
 
     console.log(wrapper);
-    document.body.addEventListener('mousewheel', mouseWheelHandler);
-    document.body.addEventListener('DOMMouseScroll', mouseWheelHandler);
+    wrapper.addEventListener('mousewheel', mouseWheelHandler);
+    wrapper.addEventListener('DOMMouseScroll', mouseWheelHandler);
 };
 
 mospa.MosSlideApp.prototype = Object.create(mospa.MosApplication.prototype);

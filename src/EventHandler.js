@@ -92,21 +92,17 @@ mospa.EventHandler = function () {
      *
      */
     this.trigger = function (event, data) {
-        var e, r, i, l,
-            eventList = events[event];
+        var e, eventList = events[event];
 
         if (data === undefined) {
             data = {};
         }
 
-        e = {
-            stopped: false,
-            stop: function () { this.stopped = true; },
-            data: data
-        };
+        e = new mospa.Event(event, data, this, eventList);
 
         if (!!hijackedEvents[event] && hijackedEvents[event].constructor === Function) {
 
+            // Check if this is really needed.
             delete e.stopped;
             delete e.stop;
             
@@ -119,23 +115,8 @@ mospa.EventHandler = function () {
             return false;
         }
 
-        l = eventList.length;
 
-
-        for (i = 0; i < l; i += 1) {
-            if (e.stopped) {
-                break;
-            }
-            if (eventList[i] !== null) {
-                r = eventList[i].callback.call(this, e);
-                if (!!eventList[i] && eventList[i].one) {
-                    eventList[i] = null;
-                }
-                if (r === false) {
-                    break;
-                }
-            }
-        }
+        e.dispatchEvent();
     };
 
     /**

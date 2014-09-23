@@ -19,6 +19,7 @@ module.exports = function(grunt) {
   	    src: [
           'src/wrap/begin.js', 
           'src/main.js', 
+          'src/Event.js', 
           'src/EventHandler.js', 
           'src/MosApplication.js', 
           'src/MosPage.js', 

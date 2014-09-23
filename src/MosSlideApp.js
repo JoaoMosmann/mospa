@@ -22,8 +22,8 @@ mospa.MosSlideApp = function (config) {
     }
 
     console.log(wrapper);
-    document.body.addEventListener('mousewheel', mouseWheelHandler);
-    document.body.addEventListener('DOMMouseScroll', mouseWheelHandler);
+    wrapper.addEventListener('mousewheel', mouseWheelHandler);
+    wrapper.addEventListener('DOMMouseScroll', mouseWheelHandler);
 };
 
 mospa.MosSlideApp.prototype = Object.create(mospa.MosApplication.prototype);

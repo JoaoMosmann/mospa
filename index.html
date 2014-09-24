@@ -26,19 +26,19 @@
 					console.log('aeho', this);
 
 					this.bind('page_change', function (e) {
+						console.log('>>>>',e);
 
 						var n = e.data.newPage,
 							o = e.data.oldPage,
-							oBt, nBt;
+							nBt;
 						
-						if(o != null) {
-							o.getDomElement().classList.remove('activated');
-							oBt = document.querySelector('header>a[href="#/'+o.getSlug()+'"]');
-							oBt.classList.remove('activated');
-						}
+						Array.prototype.forEach.call(document.querySelectorAll('header>a'), function (btt) {
+
+							btt.classList.remove('activated');
+
+						});
 
 						if(n != null) {
-							n.getDomElement().classList.add('activated');
 							nBt = document.querySelector('header>a[href="#/'+n.getSlug()+'"]');
 							nBt.classList.add('activated');
 						}
@@ -47,15 +47,12 @@
 
 					});
 
-					this.createPage(
-					{
-						slug		: "intro", 
-						domElement	: document.getElementById('intro')
-					},
-					function(config){
+					function defaultSlidePageBehavior (config){
+
+						var name = this.getSlug();
 
 						this.bind('transition_in', function (e) {
-							var name = this.getSlug();
+							
 							e.freeze();
 							console.log('My name is ' + name + ', and im transition IN');
 							this.getDomElement().classList.add('activated');
@@ -67,7 +64,7 @@
 						});
 
 						this.bind('transition_out', function (e) {
-							var name = this.getSlug();
+
 							e.freeze();
 							console.log('My name is ' + name + ', and im transition OUT');
 							this.getDomElement().classList.remove('activated');
@@ -78,79 +75,60 @@
 
 						});
 
+					}
 
-					});
+					this.createPage(
+					{
+						slug		: "intro", 
+						domElement	: document.getElementById('intro')
+					},
+					defaultSlidePageBehavior);
 
 					this.createPage(
 					{
 						slug		: "how-it-works", 
 						domElement	: document.getElementById('how-it-works')
 					},
-					function(config){
-
-						this.bind('transition_in', function (e) {
-							var name = this.getSlug();
-							e.freeze();
-							console.log('My name is ' + name + ', and im transition IN');
-							this.getDomElement().classList.add('activated');
-							setTimeout(function(){
-								console.log('' + name + ' transition IN COMPLETED');
-								e.unfreeze();
-							},1000);
-
-						});
-
-						this.bind('transition_out', function (e) {
-							var name = this.getSlug();
-							e.freeze();
-							console.log('My name is ' + name + ', and im transition OUT');
-							this.getDomElement().classList.remove('activated');
-							setTimeout(function(){
-								console.log('' + name + ' transition OUT COMPLETED');
-								e.unfreeze();
-							},1000);
-
-						});
-
-
-					});
+					defaultSlidePageBehavior);
 
 					this.createPage(
 					{
 						slug		: "why-use-it", 
 						domElement	: document.getElementById('why-use-it')
 					},
-					function(config){
+					defaultSlidePageBehavior);	
+
+					this.createPage(
+					{
+						slug		: "home", 
+						domElement	: document.getElementById('home')
+					},
+					function (config) {
 
 						this.bind('transition_in', function (e) {
-							var name = this.getSlug();
+							
 							e.freeze();
-							console.log('My name is ' + name + ', and im transition IN');
-							this.getDomElement().classList.add('activated');
+							document.getElementById('slidePagesContainer').classList.remove('activated');
 							setTimeout(function(){
-								console.log('' + name + ' transition IN COMPLETED');
 								e.unfreeze();
 							},1000);
 
 						});
 
 						this.bind('transition_out', function (e) {
-							var name = this.getSlug();
+
 							e.freeze();
-							console.log('My name is ' + name + ', and im transition OUT');
-							this.getDomElement().classList.remove('activated');
+							document.getElementById('slidePagesContainer').classList.add('activated');
 							setTimeout(function(){
-								console.log('' + name + ' transition OUT COMPLETED');
 								e.unfreeze();
 							},1000);
 
 						});
 
+					});	
 
-
-					});
-
-			});
+				}
+			);
 
 			var scrollAppConfig = {
 				offsetParent: document.getElementById('scrollPagesContainer')
@@ -161,15 +139,17 @@
 					var ignoreNextNavigation = false;
 
 					this.bind('page_change', function (e) {
+						console.log('>>>>',e);
 						
 						var n = e.data.newPage,
 							o = e.data.oldPage,
-							oBt, nBt;
+							nBt;
 						
-						if(o != null) {
-							oBt = document.querySelector('header>a[href="#/'+o.getSlug()+'"]');
-							oBt.classList.remove('activated');
-						}
+						Array.prototype.forEach.call(document.querySelectorAll('header>a'), function (btt) {
+
+							btt.classList.remove('activated');
+
+						});
 
 						if(n != null) {
 							nBt = document.querySelector('header>a[href="#/'+n.getSlug()+'"]');
@@ -355,6 +335,12 @@
 
 		#slidePagesContainer {
 			overflow: hidden;
+			height: 0;
+			transition: height 1000ms;
+		}
+
+		#slidePagesContainer.activated {
+			height: 100%;
 		}
 
 		#slidePagesContainer>section {
@@ -397,7 +383,7 @@
 
 	</header>
 	
-	<div id="slidePagesContainer" class="container" style="position:relative">
+	<div id="slidePagesContainer" class="container activated" style="position:relative">
 		
 		<section id="intro">
 			intro

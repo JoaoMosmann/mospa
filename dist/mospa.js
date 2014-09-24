@@ -708,22 +708,55 @@ mospa.MosSlideApp = function (config) {
 
     });
 
+    this.bind('page_change', function (e) {
+        var oldPage = e.data.oldPage,
+            newPage = e.data.newPage,
+            transitionInCompleted = function (e) {
+                mouseWheelHijacked = false;
+            };
+
+        mouseWheelHijacked = true;
+
+        if (oldPage instanceof mospa.MosPage) {
+
+            oldPage.one('transition_out', function (e) {
+
+                if (newPage instanceof mospa.MosPage) {
+
+                    newPage.one('transition_in', transitionInCompleted);
+                    newPage.trigger('transition_in');
+
+                }
+
+            });
+            oldPage.trigger('transition_out');
+
+        } else {
+
+            if (newPage instanceof mospa.MosPage) {
+
+                newPage.one('transition_in', transitionInCompleted);
+                newPage.trigger('transition_in');
+
+            }
+
+        }
+
+    });
+
     function scrollPage(e) {
         
     }
 
     function mouseWheelHandler (e) { 
-        if (mouseWheelHijacked) return;
+        if (mouseWheelHijacked) {
+            return;
+        }
 
         var delta = e.wheelDeltaY || e.wheelDelta || -e.deltaY,
             currentPage = self.getCurrentPage(),
             tempIndex = currentIndex,
-            tempPage,
-            transitionInCompleted = function (e) {
-                mouseWheelHijacked = false;
-                currentIndex = tempIndex;
-                self.setCurrentPage(pages[tempIndex]);
-            };
+            tempPage;           
         
         if (delta > 0) {
             // up
@@ -740,34 +773,14 @@ mospa.MosSlideApp = function (config) {
         tempIndex = Math.min(pagesLength-1, tempIndex);
         console.log(tempIndex);
         
+        if (tempIndex === currentIndex) {
+            return;
+        }
+
         tempPage = pages[tempIndex];
 
-        mouseWheelHijacked = true;
-        console.log(currentPage);
-        if (currentPage instanceof mospa.MosPage) {
-
-            currentPage.one('transition_out', function (e) {
-
-                if (tempPage instanceof mospa.MosPage) {
-
-                    tempPage.one('transition_in', transitionInCompleted);
-                    tempPage.trigger('transition_in');
-
-                }
-
-            });
-            currentPage.trigger('transition_out');
-
-        } else {
-
-            if (tempPage instanceof mospa.MosPage) {
-
-                tempPage.one('transition_in', transitionInCompleted);
-                tempPage.trigger('transition_in');
-
-            }
-
-        }
+        currentIndex = tempIndex;
+        self.setCurrentPage(pages[tempIndex]);
 
     }
 

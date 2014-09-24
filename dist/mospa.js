@@ -724,19 +724,19 @@ mospa.MosSlideApp = function (config) {
                 if (newPage instanceof mospa.MosPage) {
 
                     newPage.one('transition_in', transitionInCompleted);
-                    newPage.trigger('transition_in');
+                    newPage.trigger('transition_in', e.data);
 
                 }
 
             });
-            oldPage.trigger('transition_out');
+            oldPage.trigger('transition_out', e.data);
 
         } else {
 
             if (newPage instanceof mospa.MosPage) {
 
                 newPage.one('transition_in', transitionInCompleted);
-                newPage.trigger('transition_in');
+                newPage.trigger('transition_in', e.data);
 
             }
 

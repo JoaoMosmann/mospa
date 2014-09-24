@@ -41,6 +41,10 @@ mospa.MosApplication = function (config) {
         return pages.concat();
     };
 
+    this.countPages = function () {
+        return pages.length;
+    };
+
     this.getPageBySlug = function (s) {
         var x,
             l = pages.length;

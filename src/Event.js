@@ -34,7 +34,7 @@ mospa.Event.prototype.dispatchEvent = function (startAt) {
             break;
         }
         if (this.isFreezed) {
-            this. = i;
+            this.freezedAt = i;
             break;
         }
         if (this.eventList[i] !== null) {

@@ -25,6 +25,8 @@ mospa.MosSlideApp = function (config) {
                 mouseWheelHijacked = false;
             };
 
+        currentIndex = pages.indexOf(e.data.newPage);
+
         mouseWheelHijacked = true;
 
         if (oldPage instanceof mospa.MosPage) {
@@ -89,9 +91,7 @@ mospa.MosSlideApp = function (config) {
 
         tempPage = pages[tempIndex];
 
-        currentIndex = tempIndex;
         self.setCurrentPage(pages[tempIndex]);
-
     }
 
     console.log(wrapper);

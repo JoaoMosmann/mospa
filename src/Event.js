@@ -86,6 +86,9 @@ mospa.Event.prototype.freeze = function () {
  *
  */
 mospa.Event.prototype.unfreeze = function () {
-	this.isFreezed = false;
-    this.dispatchEvent(this.freezedAt);
+
+    if (this.isFreezed) {
+    	this.isFreezed = false;
+        this.dispatchEvent(this.freezedAt);
+    }
 }

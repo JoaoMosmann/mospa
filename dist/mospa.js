@@ -378,6 +378,11 @@ mospa.MosApplication = function (config) {
     };
 
     this.setCurrentPage = function (p) {
+
+        if (currentPage === p) {
+            return false; 
+        }
+
         this.trigger('page_change', {
             oldPage: currentPage,
             newPage: p

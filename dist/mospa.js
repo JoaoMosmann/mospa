@@ -143,7 +143,6 @@ mospa.Event.prototype.freeze = function () {
  *
  */
 mospa.Event.prototype.unfreeze = function () {
-
     if (this.isFreezed) {
     	this.isFreezed = false;
         this.dispatchEvent(this.freezedAt);
@@ -380,7 +379,7 @@ mospa.MosApplication = function (config) {
     this.setCurrentPage = function (p) {
 
         if (currentPage === p) {
-            return false; 
+            return false;
         }
 
         this.trigger('page_change', {
@@ -781,7 +780,6 @@ mospa.MosSlideApp = function (config) {
 
         tempIndex = Math.max(0, tempIndex);
         tempIndex = Math.min(pagesLength-1, tempIndex);
-        console.log(tempIndex);
         
         if (tempIndex === currentIndex) {
             return;
@@ -792,7 +790,6 @@ mospa.MosSlideApp = function (config) {
         self.setCurrentPage(pages[tempIndex]);
     }
 
-    console.log(wrapper);
     wrapper.addEventListener('mousewheel', mouseWheelHandler);
     wrapper.addEventListener('DOMMouseScroll', mouseWheelHandler);
 };

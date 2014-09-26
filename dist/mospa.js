@@ -704,7 +704,11 @@ mospa.MosSlideApp = function (config) {
         pagesLength = 0,
         currentIndex = 0,
         mouseWheelHijacked = false,
-        pages = [];
+        pages = [],
+
+        allowInertia = config.allowInertia,
+        waitingInertiaEnd = false,
+        inertiaTimer;
 
 
     this.bind('pageadded', function (e) {
@@ -726,6 +730,7 @@ mospa.MosSlideApp = function (config) {
         currentIndex = pages.indexOf(e.data.newPage);
 
         mouseWheelHijacked = true;
+        waitingInertiaEnd = true;        
 
         if (oldPage instanceof mospa.MosPage) {
 
@@ -758,16 +763,24 @@ mospa.MosSlideApp = function (config) {
         
     }
 
-    function mouseWheelHandler (e) { 
-        if (mouseWheelHijacked) {
-            return;
-        }
+    function mouseWheelHandler (e) {
 
         var delta = e.wheelDeltaY || e.wheelDelta || -e.deltaY,
             currentPage = self.getCurrentPage(),
             tempIndex = currentIndex,
             tempPage;           
         
+        if (!allowInertia) {
+            clearTimeout(inertiaTimer);
+            inertiaTimer = setTimeout(function(){
+                waitingInertiaEnd = false;
+            },250);
+        }
+
+        if (mouseWheelHijacked || (!allowInertia && waitingInertiaEnd) ) {
+            return;
+        }
+
         if (delta > 0) {
             // up
 

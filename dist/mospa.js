@@ -397,7 +397,8 @@ mospa.MosApplication = function (config) {
                 x;
 
             if (currentHash !== null && newHash.join('/') === currentHash.join('/')) {
-                // SAME HASH... SHOULD DO NOTHING.
+
+                thisApp.setCurrentPageByHash(newHash[0]);
 
             } else if (currentHash !== null && newHash[0] === currentHash[0]) {
                 // SAME PAGE. TRIGGER EVENT FOR THE PAGE

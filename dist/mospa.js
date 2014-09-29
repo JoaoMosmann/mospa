@@ -765,7 +765,7 @@ mospa.MosSlideApp = function (config) {
 
     function mouseWheelHandler (e) {
 
-        var delta = e.wheelDeltaY || e.wheelDelta || -e.deltaY,
+        var delta = e.wheelDeltaY || e.wheelDelta || -e.deltaY || -e.detail,
             currentPage = self.getCurrentPage(),
             tempIndex = currentIndex,
             tempPage;           

@@ -524,6 +524,8 @@ mospa.MosScrollApp = function (config) {
         offsetParentHeight = 0,
         prevPagesPercData = {},
         prevScrollTop = null,
+        prevScrollTime = 0,
+        visibilityCalcThrottle = config.visibilityCalcThrottle || false,
         /*
             Calculates and store the starting and ending points for each page.
             Storing this values improves the performance by avoiding further
@@ -581,13 +583,20 @@ mospa.MosScrollApp = function (config) {
         doCacheOffsets.call(this, p);      
     });
 
-    this.calculateVisibility = function () {
+    this.calculateVisibility = function (considerThrottle) {
 
         var wBegin = offsetParent.scrollTop || offsetParent.scrollY || 0,
             wEnd = wBegin + offsetParentHeight,
+            currentTime = (new Date()).getTime(),
             pagesPercData = {},
             scrollDirection = 'stopped',
             cBegin, cEnd, perc1, perc2, tempBegin, tempEnd, x;
+
+        if (considerThrottle && visibilityCalcThrottle && (currentTime - prevScrollTime) < visibilityCalcThrottle) {
+            return;
+        }
+
+        prevScrollTime = currentTime;
 
         if (prevScrollTop !== null) {
 
@@ -688,7 +697,7 @@ mospa.MosScrollApp = function (config) {
     });
 
     offsetParent.addEventListener('scroll', function () {
-        that.calculateVisibility();
+        that.calculateVisibility(true);
     });
 
     this.recalcOffsets = doCacheOffsets;

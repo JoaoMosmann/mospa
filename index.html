@@ -23,22 +23,18 @@
 				function(b){
 					var ignoreNextNavigation = false;
 
-					console.log('aeho', this);
-
 					this.bind('page_change', function (e) {
-						console.log('>>>>',e);
 
 						var n = e.data.newPage,
 							o = e.data.oldPage,
-							nBt;
+							nBt, oBt;
 						
-						Array.prototype.forEach.call(document.querySelectorAll('header>a'), function (btt) {
+						if(o != null) {
+							oBt = document.querySelector('header>a[href="#/'+o.getSlug()+'"]');
+							oBt.classList.remove('activated');
+						}
 
-							btt.classList.remove('activated');
-
-						});
-
-						if(n != null) {
+						if(n != null && n.getSlug() !== 'home') {
 							nBt = document.querySelector('header>a[href="#/'+n.getSlug()+'"]');
 							nBt.classList.add('activated');
 						}
@@ -54,10 +50,8 @@
 						this.bind('transition_in', function (e) {
 							
 							e.freeze();
-							console.log('My name is ' + name + ', and im transition IN');
 							this.getDomElement().classList.add('activated');
 							setTimeout(function(){
-								console.log('' + name + ' transition IN COMPLETED');
 								e.unfreeze();
 							},1000);
 
@@ -66,10 +60,8 @@
 						this.bind('transition_out', function (e) {
 
 							e.freeze();
-							console.log('My name is ' + name + ', and im transition OUT');
 							this.getDomElement().classList.remove('activated');
 							setTimeout(function(){
-								console.log('' + name + ' transition OUT COMPLETED');
 								e.unfreeze();
 							},1000);
 
@@ -135,36 +127,36 @@
 			);
 
 			var scrollAppConfig = {
-				offsetParent: document.getElementById('scrollPagesContainer')
+				offsetParent: document.getElementById('scrollPagesContainer'),
+				visibilityCalcThrottle: 100
 			}
 
 			window.scrollApp = mospa.createApplication('scrollapp', scrollAppConfig,
-				function(b){
+				function(config){
 					var ignoreNextNavigation = false;
 
 					this.bind('page_change', function (e) {
-						console.log('>>>>',e);
 						
 						var n = e.data.newPage,
 							o = e.data.oldPage,
-							nBt;
-						
-						Array.prototype.forEach.call(document.querySelectorAll('header>a'), function (btt) {
+							nBt, oBt;
 
-							btt.classList.remove('activated');
-
-						});
+						if(o != null) {
+							oBt = document.querySelector('header>a[href="#/'+o.getSlug()+'"]');
+							oBt.classList.remove('activated');
+						}
 
 						if(n != null) {
 							nBt = document.querySelector('header>a[href="#/'+n.getSlug()+'"]');
 							nBt.classList.add('activated');
+							slideApp.setCurrentPageByHash('home');
 						}
 
 						if (!ignoreNextNavigation) { 
 
 							this.hijackEvent('after_scroll', function (e) {});
 
-							window.scroll(0, n.offset.topStart);
+							config.offsetParent.scrollTop = n.offset.topStart;
 
 							setTimeout(function () {
 								scrollApp.freeEvent('after_scroll');
@@ -174,7 +166,7 @@
 						ignoreNextNavigation = false;
 					});
 
-					this.bind('after_scroll', function (e) {
+					this.bind('after_scroll', function (e) { console.log('aegooo');
 						var visibles = e.data.visibility,
 							l = visibles.length,
 							bestX, x, newHash;
@@ -212,26 +204,7 @@
 					slug		: "home", 
 					domElement	: document.getElementById('home')
 				},
-				function(config){
-
-					console.log('I\'m the home page');
-					var dom = this.getDomElement();
-					var bt = dom.getElementsByClassName('bt')[0];
-
-					bt.addEventListener('click',function(){
-
-						console.log('go to contact!!!');
-
-					});
-
-					this.bind('appeared', function(e){
-						console.log('My name is HOME and I\'m visible now!!!', e)
-					});
-
-					this.bind('disappeared', function(e){
-						console.log('HOME is invisible now!!!', e)
-					});
-				}
+				function(config){}
 			);
 
 
@@ -240,11 +213,7 @@
 					slug		: "products", 
 					domElement	: document.getElementById('products')
 				},
-				function(config){
-
-					console.log('I\'m the product page');
-				
-				}
+				function(config){}
 			);
 
 			prodPage.bind('hashchange',function(e){
@@ -256,11 +225,7 @@
 					slug		: "about-us", 
 					domElement	: document.getElementById('about-us')
 				},
-				function(config){
-
-					console.log('I\'m the about-us page');	
-
-				}
+				function(config){}
 			);
 
 			scrollApp.createPage(
@@ -268,16 +233,11 @@
 					slug		: "contact", 
 					domElement	: document.getElementById('contact')
 				},
-				function(config){
-
-					console.log('I\'m the contact page');
-				
-				}
+				function(config){}
 			);			
 
 			scrollApp.setCurrentPageByHash(onloadHash.split('/').slice(1)[0]);
-			slideApp.setCurrentPageByHash(onloadHash.split('/').slice(1)[0]);
-
+			slideApp.setCurrentPageByHash(onloadHash.split('/').slice(1)[0] || 'intro');
 
 		});
 

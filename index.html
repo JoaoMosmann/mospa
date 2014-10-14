@@ -16,7 +16,8 @@
 			var onloadHash = location.hash;
 
 			var slideAppConfig = {
-				wrapper: document.getElementById('slidePagesContainer')
+				wrapper: document.getElementById('slidePagesContainer'),
+				history_mode: 'pushstate'
 			}
 
 			window.slideApp = mospa.createApplication('slideapp', slideAppConfig,
@@ -128,7 +129,8 @@
 
 			var scrollAppConfig = {
 				offsetParent: document.getElementById('scrollPagesContainer'),
-				visibilityCalcThrottle: 100
+				visibilityCalcThrottle: 100,
+				history_mode: 'pushstate'
 			}
 
 			window.scrollApp = mospa.createApplication('scrollapp', scrollAppConfig,

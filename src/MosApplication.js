@@ -4,7 +4,8 @@ mospa.MosApplication = function (config) {
     var pages = [],
         thisApp = this,
         currentHash = null,
-        currentPage = null;
+        currentPage = null,
+        oldOnPopState;
 
     if (!config.history_mode) {
         config.history_mode = 'location_hash';
@@ -82,7 +83,19 @@ mospa.MosApplication = function (config) {
         currentPage = p;
     };
 
-    if (config.history_mode === 'location_hash') {
+    if (config.history_mode === 'pushstate') {
+
+        if (window.onpopstate) {
+            oldOnPopState = window.onpopstate;
+        }
+
+        window.onpopstate = function(event) {
+            alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
+
+            oldOnPopState(event);
+        };
+
+    } else if (config.history_mode === 'location_hash') {
 
         window.addEventListener("hashchange", function () {
 

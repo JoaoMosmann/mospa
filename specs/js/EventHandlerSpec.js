@@ -232,6 +232,63 @@ describe("A mospa.EventHandler", function() {
 
     });
 
+    it("a hijacked event shoudn't run callbacks", function(done) {
+
+      var myCounter = 0;
+
+      var fn1 = function (e) {
+        myCounter += 3;
+      }
+
+      var fn2 = function (e) {
+        myCounter += 4;
+      }
+
+      var fn3 = function (e) {
+        myCounter += 25;
+
+        expect(myCounter).toEqual(25);
+        done();
+      }
+
+      object.bind('some_event', fn1);
+      object.bind('some_event', fn2);
+      object.hijackEvent('some_event', fn3);
+
+      object.trigger('some_event');
+      
+
+    });
+
+    it("a freed event should run all the callbacks normally", function(done) {
+
+      var myCounter = 0;
+
+      var fn1 = function (e) {
+        myCounter += 3;
+      }
+
+      var fn2 = function (e) {
+        myCounter += 4;
+        expect(myCounter).toEqual(7);
+        done();
+      }
+
+      var fn3 = function (e) {
+        myCounter += 25;
+
+      }
+
+      object.bind('some_event', fn1);
+      object.bind('some_event', fn2);
+      object.hijackEvent('some_event', fn3);
+      object.freeEvent('some_event');
+
+      object.trigger('some_event');
+      
+
+    });
+
   });
 
 });
